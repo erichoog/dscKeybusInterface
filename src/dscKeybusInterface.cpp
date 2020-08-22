@@ -17,46 +17,46 @@
 
 #include "dscKeybusInterface.h"
 
-byte dscKeybusInterface::dscClockPin;
-byte dscKeybusInterface::dscReadPin;
-byte dscKeybusInterface::dscWritePin;
+uint8_t dscKeybusInterface::dscClockPin;
+uint8_t dscKeybusInterface::dscReadPin;
+uint8_t dscKeybusInterface::dscWritePin;
 char dscKeybusInterface::writeKey;
-byte dscKeybusInterface::writePartition;
-byte dscKeybusInterface::writeByte;
-byte dscKeybusInterface::writeBit;
+uint8_t dscKeybusInterface::writePartition;
+uint8_t dscKeybusInterface::writeByte;
+uint8_t dscKeybusInterface::writeBit;
 bool dscKeybusInterface::virtualKeypad;
 bool dscKeybusInterface::processModuleData;
-byte dscKeybusInterface::panelData[dscReadSize];
-byte dscKeybusInterface::panelByteCount;
-byte dscKeybusInterface::panelBitCount;
+uint8_t dscKeybusInterface::panelData[dscReadSize];
+uint8_t dscKeybusInterface::panelByteCount;
+uint8_t dscKeybusInterface::panelBitCount;
 volatile bool dscKeybusInterface::writeReady;
-volatile byte dscKeybusInterface::moduleData[dscReadSize];
+volatile uint8_t dscKeybusInterface::moduleData[dscReadSize];
 volatile bool dscKeybusInterface::moduleDataCaptured;
-volatile byte dscKeybusInterface::moduleByteCount;
-volatile byte dscKeybusInterface::moduleBitCount;
+volatile uint8_t dscKeybusInterface::moduleByteCount;
+volatile uint8_t dscKeybusInterface::moduleBitCount;
 volatile bool dscKeybusInterface::writeAlarm;
 volatile bool dscKeybusInterface::writeAsterisk;
 volatile bool dscKeybusInterface::wroteAsterisk;
 volatile bool dscKeybusInterface::bufferOverflow;
-volatile byte dscKeybusInterface::panelBufferLength;
-volatile byte dscKeybusInterface::panelBuffer[dscBufferSize][dscReadSize];
-volatile byte dscKeybusInterface::panelBufferBitCount[dscBufferSize];
-volatile byte dscKeybusInterface::panelBufferByteCount[dscBufferSize];
-volatile byte dscKeybusInterface::isrPanelData[dscReadSize];
-volatile byte dscKeybusInterface::isrPanelByteCount;
-volatile byte dscKeybusInterface::isrPanelBitCount;
-volatile byte dscKeybusInterface::isrPanelBitTotal;
-volatile byte dscKeybusInterface::isrModuleData[dscReadSize];
-volatile byte dscKeybusInterface::isrModuleByteCount;
-volatile byte dscKeybusInterface::isrModuleBitCount;
-volatile byte dscKeybusInterface::isrModuleBitTotal;
-volatile byte dscKeybusInterface::currentCmd;
-volatile byte dscKeybusInterface::statusCmd;
+volatile uint8_t dscKeybusInterface::panelBufferLength;
+volatile uint8_t dscKeybusInterface::panelBuffer[dscBufferSize][dscReadSize];
+volatile uint8_t dscKeybusInterface::panelBufferBitCount[dscBufferSize];
+volatile uint8_t dscKeybusInterface::panelBufferByteCount[dscBufferSize];
+volatile uint8_t dscKeybusInterface::isrPanelData[dscReadSize];
+volatile uint8_t dscKeybusInterface::isrPanelByteCount;
+volatile uint8_t dscKeybusInterface::isrPanelBitCount;
+volatile uint8_t dscKeybusInterface::isrPanelBitTotal;
+volatile uint8_t dscKeybusInterface::isrModuleData[dscReadSize];
+volatile uint8_t dscKeybusInterface::isrModuleByteCount;
+volatile uint8_t dscKeybusInterface::isrModuleBitCount;
+volatile uint8_t dscKeybusInterface::isrModuleBitTotal;
+volatile uint8_t dscKeybusInterface::currentCmd;
+volatile uint8_t dscKeybusInterface::statusCmd;
 volatile unsigned long dscKeybusInterface::clockHighTime;
 volatile unsigned long dscKeybusInterface::keybusTime;
 
 
-dscKeybusInterface::dscKeybusInterface(byte setClockPin, byte setReadPin, byte setWritePin) {
+dscKeybusInterface::dscKeybusInterface(uint8_t setClockPin, uint8_t setReadPin, uint8_t setWritePin) {
   dscClockPin = setClockPin;
   dscReadPin = setReadPin;
   dscWritePin = setWritePin;
@@ -69,11 +69,15 @@ dscKeybusInterface::dscKeybusInterface(byte setClockPin, byte setReadPin, byte s
 }
 
 
-void dscKeybusInterface::begin(Stream &_stream) {
+void dscKeybusInterface::begin() {
+
+  struct gpiod_chip *output_chip;
+	struct gpiod_line *output_line;
+
   pinMode(dscClockPin, INPUT);
   pinMode(dscReadPin, INPUT);
   if (virtualKeypad) pinMode(dscWritePin, OUTPUT);
-  stream = &_stream;
+  // stream = &_stream;
 
   // Platform-specific timers trigger a read of the data line 250us after the Keybus clock changes
 
@@ -116,9 +120,9 @@ bool dscKeybusInterface::handlePanel() {
   if (panelBufferLength == 0) return false;
 
   // Copies data from the buffer to panelData[]
-  static byte panelBufferIndex = 1;
-  byte dataIndex = panelBufferIndex - 1;
-  for (byte i = 0; i < dscReadSize; i++) panelData[i] = panelBuffer[dataIndex][i];
+  static uint8_t panelBufferIndex = 1;
+  uint8_t dataIndex = panelBufferIndex - 1;
+  for (uint8_t i = 0; i < dscReadSize; i++) panelData[i] = panelBuffer[dataIndex][i];
   panelBitCount = panelBufferBitCount[dataIndex];
   panelByteCount = panelBufferByteCount[dataIndex];
   panelBufferIndex++;
@@ -139,8 +143,8 @@ bool dscKeybusInterface::handlePanel() {
   }
 
   // Skips redundant data sent constantly while in installer programming
-  static byte previousCmd0A[dscReadSize];
-  static byte previousCmdE6_20[dscReadSize];
+  static uint8_t previousCmd0A[dscReadSize];
+  static uint8_t previousCmdE6_20[dscReadSize];
   switch (panelData[0]) {
     case 0x0A:  // Status in programming
       if (redundantPanelData(previousCmd0A, panelData)) return false;
@@ -151,23 +155,23 @@ bool dscKeybusInterface::handlePanel() {
       break;
   }
   if (dscPartitions > 4) {
-    static byte previousCmdE6_03[dscReadSize];
+    static uint8_t previousCmdE6_03[dscReadSize];
     if (panelData[0] == 0xE6 && panelData[2] == 0x03 && redundantPanelData(previousCmdE6_03, panelData, 8)) return false;  // Status in alarm/programming, partitions 5-8
   }
 
   // Skips redundant data from periodic commands sent at regular intervals, skipping is a configurable
   // option and the default behavior to help see new Keybus data when decoding the protocol
   if (!processRedundantData) {
-    static byte previousCmd11[dscReadSize];
-    static byte previousCmd16[dscReadSize];
-    static byte previousCmd27[dscReadSize];
-    static byte previousCmd2D[dscReadSize];
-    static byte previousCmd34[dscReadSize];
-    static byte previousCmd3E[dscReadSize];
-    static byte previousCmd5D[dscReadSize];
-    static byte previousCmd63[dscReadSize];
-    static byte previousCmdB1[dscReadSize];
-    static byte previousCmdC3[dscReadSize];
+    static uint8_t previousCmd11[dscReadSize];
+    static uint8_t previousCmd16[dscReadSize];
+    static uint8_t previousCmd27[dscReadSize];
+    static uint8_t previousCmd2D[dscReadSize];
+    static uint8_t previousCmd34[dscReadSize];
+    static uint8_t previousCmd3E[dscReadSize];
+    static uint8_t previousCmd5D[dscReadSize];
+    static uint8_t previousCmd63[dscReadSize];
+    static uint8_t previousCmdB1[dscReadSize];
+    static uint8_t previousCmdC3[dscReadSize];
     switch (panelData[0]) {
       case 0x11:  // Keypad slot query
         if (redundantPanelData(previousCmd11, panelData)) return false;
@@ -237,9 +241,9 @@ bool dscKeybusInterface::handleModule() {
   // Skips periodic keypad slot query responses
   if (!processRedundantData && currentCmd == 0x11) {
     bool redundantData = true;
-    byte checkedBytes = dscReadSize;
-    static byte previousSlotData[dscReadSize];
-    for (byte i = 0; i < checkedBytes; i++) {
+    uint8_t checkedBytes = dscReadSize;
+    static uint8_t previousSlotData[dscReadSize];
+    for (uint8_t i = 0; i < checkedBytes; i++) {
       if (previousSlotData[i] != moduleData[i]) {
         redundantData = false;
         break;
@@ -247,7 +251,7 @@ bool dscKeybusInterface::handleModule() {
     }
     if (redundantData) return false;
     else {
-      for (byte i = 0; i < dscReadSize; i++) previousSlotData[i] = moduleData[i];
+      for (uint8_t i = 0; i < dscReadSize; i++) previousSlotData[i] = moduleData[i];
       return true;
     }
   }
@@ -274,7 +278,7 @@ void dscKeybusInterface::write(const char * receivedKeys) {
 
 // Writes multiple keys from a char array
 void dscKeybusInterface::writeKeys(const char * writeKeysArray) {
-  static byte writeCounter = 0;
+  static uint8_t writeCounter = 0;
   if (writeKeysPending && writeReady && writeCounter < strlen(writeKeysArray)) {
     if (writeKeysArray[writeCounter] != '\0') {
       write(writeKeysArray[writeCounter]);
@@ -387,9 +391,9 @@ void dscKeybusInterface::write(const char receivedKey) {
 }
 
 
-bool dscKeybusInterface::redundantPanelData(byte previousCmd[], volatile byte currentCmd[], byte checkedBytes) {
+bool dscKeybusInterface::redundantPanelData(uint8_t previousCmd[], volatile uint8_t currentCmd[], uint8_t checkedBytes) {
   bool redundantData = true;
-  for (byte i = 0; i < checkedBytes; i++) {
+  for (uint8_t i = 0; i < checkedBytes; i++) {
     if (previousCmd[i] != currentCmd[i]) {
       redundantData = false;
       break;
@@ -397,16 +401,16 @@ bool dscKeybusInterface::redundantPanelData(byte previousCmd[], volatile byte cu
   }
   if (redundantData) return true;
   else {
-    for (byte i = 0; i < dscReadSize; i++) previousCmd[i] = currentCmd[i];
+    for (uint8_t i = 0; i < dscReadSize; i++) previousCmd[i] = currentCmd[i];
     return false;
   }
 }
 
 
 bool dscKeybusInterface::validCRC() {
-  byte byteCount = (panelBitCount - 1) / 8;
+  uint8_t byteCount = (panelBitCount - 1) / 8;
   int dataSum = 0;
-  for (byte panelByte = 0; panelByte < byteCount; panelByte++) {
+  for (uint8_t panelByte = 0; panelByte < byteCount; panelByte++) {
     if (panelByte != 1) dataSum += panelData[panelByte];
   }
   if (dataSum % 256 == panelData[byteCount]) return true;
@@ -507,17 +511,6 @@ void ICACHE_RAM_ATTR dscKeybusInterface::dscClockInterrupt() {
   }
 }
 
-
-// Interrupt function called after 250us by dscClockInterrupt() using AVR Timer1, disables the timer and calls
-// dscDataInterrupt() to read the data line
-#if defined(__AVR__)
-ISR(TIMER1_OVF_vect) {
-  TCCR1B = 0;  // Disables Timer1
-  dscKeybusInterface::dscDataInterrupt();
-}
-#endif
-
-
 // Interrupt function called by AVR Timer1 and esp8266 timer1 after 250us to read the data line
 #if defined(__AVR__)
 void dscKeybusInterface::dscDataInterrupt() {
@@ -616,8 +609,8 @@ void ICACHE_RAM_ATTR dscKeybusInterface::dscDataInterrupt() {
       // rate, so they are always skipped.  Checking is required in the ISR to prevent flooding the buffer.
       if (isrPanelBitTotal < 8) skipData = true;
       else switch (isrPanelData[0]) {
-        static byte previousCmd05[dscReadSize];
-        static byte previousCmd1B[dscReadSize];
+        static uint8_t previousCmd05[dscReadSize];
+        static uint8_t previousCmd1B[dscReadSize];
         case 0x05:  // Status: partitions 1-4
           if (redundantPanelData(previousCmd05, isrPanelData, isrPanelByteCount)) skipData = true;
           break;
@@ -631,14 +624,14 @@ void ICACHE_RAM_ATTR dscKeybusInterface::dscDataInterrupt() {
       currentCmd = isrPanelData[0];
       if (panelBufferLength == dscBufferSize) bufferOverflow = true;
       else if (!skipData && panelBufferLength < dscBufferSize) {
-        for (byte i = 0; i < dscReadSize; i++) panelBuffer[panelBufferLength][i] = isrPanelData[i];
+        for (uint8_t i = 0; i < dscReadSize; i++) panelBuffer[panelBufferLength][i] = isrPanelData[i];
         panelBufferBitCount[panelBufferLength] = isrPanelBitTotal;
         panelBufferByteCount[panelBufferLength] = isrPanelByteCount;
         panelBufferLength++;
       }
 
       // Resets the panel capture data and counters
-      for (byte i = 0; i < dscReadSize; i++) isrPanelData[i] = 0;
+      for (uint8_t i = 0; i < dscReadSize; i++) isrPanelData[i] = 0;
       isrPanelBitTotal = 0;
       isrPanelBitCount = 0;
       isrPanelByteCount = 0;
@@ -650,17 +643,31 @@ void ICACHE_RAM_ATTR dscKeybusInterface::dscDataInterrupt() {
         if (moduleDataDetected) {
           moduleDataDetected = false;
           moduleDataCaptured = true;  // Sets a flag for handleModules()
-          for (byte i = 0; i < dscReadSize; i++) moduleData[i] = isrModuleData[i];
+          for (uint8_t i = 0; i < dscReadSize; i++) moduleData[i] = isrModuleData[i];
           moduleBitCount = isrModuleBitTotal;
           moduleByteCount = isrModuleByteCount;
         }
 
         // Resets the keypad and module capture data and counters
-        for (byte i = 0; i < dscReadSize; i++) isrModuleData[i] = 0;
+        for (uint8_t i = 0; i < dscReadSize; i++) isrModuleData[i] = 0;
         isrModuleBitTotal = 0;
         isrModuleBitCount = 0;
         isrModuleByteCount = 0;
       }
     }
   }
+}
+
+bool bitRead(uint8_t byte_to_read, int position_from_right) {
+  return (byte_to_read >> position_from_right) & 1;
+}
+
+void bitWrite(uint8_t byte_to_write, uint8_t position_from_right, int bitValue) {
+    int mask = 1 << position_from_right; 
+    return (byte_to_write & ~mask) | ((bitValue << position_from_right) & mask); 
+}
+
+uint64_t millis() {
+  using namespace std::chrono;
+  return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }

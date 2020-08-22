@@ -57,12 +57,12 @@ void dscKeybusInterface::printPanelMessage() {
     case 0xE6: printPanel_0xE6(); return;  // Extended status commands: partitions 3-8, zones 33-64
     case 0xEB: printPanel_0xEB(); return;  // Date, time, system status messages - partitions 1-8
     default: {
-      stream->print(F("Unrecognized data"));
+      std::cout << "Unrecognized data" << std::endl;
       if (!validCRC()) {
-        stream->print(F("[No CRC or CRC Error]"));
+        std::cout << "[No CRC or CRC Error]" << std::endl;
         return;
       }
-      else stream->print(F("[CRC OK]"));
+      else std::cout << "[CRC OK]" << std::endl;
       return;
     }
   }
@@ -99,103 +99,103 @@ void dscKeybusInterface::printModuleMessage() {
 
 
  // Keypad lights for commands 0x05, 0x0A, 0x1B, 0x27, 0x2D, 0x34, 0x3E, 0x5D
- void dscKeybusInterface::printPanelLights(byte panelByte) {
-  if (panelData[panelByte] == 0) stream->print(F("none "));
+ void dscKeybusInterface::printPanelLights(uint8_t panelByte) {
+  if (panelData[panelByte] == 0) std::cout << "none " << std::endl; //std::cout << "none "));
   else {
-    if (bitRead(panelData[panelByte],0)) stream->print(F("Ready "));
-    if (bitRead(panelData[panelByte],1)) stream->print(F("Armed "));
-    if (bitRead(panelData[panelByte],2)) stream->print(F("Memory "));
-    if (bitRead(panelData[panelByte],3)) stream->print(F("Bypass "));
-    if (bitRead(panelData[panelByte],4)) stream->print(F("Trouble "));
-    if (bitRead(panelData[panelByte],5)) stream->print(F("Program "));
-    if (bitRead(panelData[panelByte],6)) stream->print(F("Fire "));
-    if (bitRead(panelData[panelByte],7)) stream->print(F("Backlight "));
+    if (bitRead(panelData[panelByte],0)) std::cout << "Ready " << std::endl;
+    if (bitRead(panelData[panelByte],1)) std::cout << "Armed " << std::endl;
+    if (bitRead(panelData[panelByte],2)) std::cout << "Memory " << std::endl;
+    if (bitRead(panelData[panelByte],3)) std::cout << "Bypass " << std::endl;
+    if (bitRead(panelData[panelByte],4)) std::cout << "Trouble " << std::endl;
+    if (bitRead(panelData[panelByte],5)) std::cout << "Program " << std::endl;
+    if (bitRead(panelData[panelByte],6)) std::cout << "Fire " << std::endl;
+    if (bitRead(panelData[panelByte],7)) std::cout << "Backlight " << std::endl;
   }
  }
 
 
 // Messages for commands 0x05, 0x0A, 0x1B, 0x27, 0x2D, 0x34, 0x3E
-void dscKeybusInterface::printPanelMessages(byte panelByte) {
+void dscKeybusInterface::printPanelMessages(uint8_t panelByte) {
   switch (panelData[panelByte]) {
-    case 0x01: stream->print(F("Partition ready")); break;
-    case 0x02: stream->print(F("Stay/away zones open")); break;
-    case 0x03: stream->print(F("Zones open")); break;
-    case 0x04: stream->print(F("Armed stay")); break;
-    case 0x05: stream->print(F("Armed away")); break;
-    case 0x07: stream->print(F("Failed to arm")); break;
-    case 0x08: stream->print(F("Exit delay in progress")); break;
-    case 0x09: stream->print(F("Arming with no entry delay")); break;
-    case 0x0B: stream->print(F("Quick exit in progress")); break;
-    case 0x0C: stream->print(F("Entry delay in progress")); break;
-    case 0x0D: stream->print(F("Opening after alarm")); break;
-    case 0x10: stream->print(F("Keypad lockout")); break;
-    case 0x11: stream->print(F("Partition in alarm")); break;
-    case 0x14: stream->print(F("Auto-arm in progress")); break;
-    case 0x15: stream->print(F("Arming with bypassed zones")); break;
-    case 0x16: stream->print(F("Armed with no entry delay")); break;
-    case 0x22: stream->print(F("Recent closing")); break;
-    case 0x33: stream->print(F("Command output in progress")); break;
-    case 0x3D: stream->print(F("Disarmed after alarm in memory")); break;
-    case 0x3E: stream->print(F("Partition disarmed")); break;
-    case 0x40: stream->print(F("Keypad blanked")); break;
-    case 0x8A: stream->print(F("Activate stay/away zones")); break;
-    case 0x8B: stream->print(F("Quick exit")); break;
-    case 0x8E: stream->print(F("Invalid option")); break;
-    case 0x8F: stream->print(F("Invalid access code")); break;
-    case 0x9E: stream->print(F("Enter * function code")); break;
-    case 0x9F: stream->print(F("Enter access code")); break;
-    case 0xA0: stream->print(F("*1: Zone bypass programming")); break;
-    case 0xA1: stream->print(F("*2: Trouble menu")); break;
-    case 0xA2: stream->print(F("*3: Alarm memory display")); break;
-    case 0xA3: stream->print(F("Door chime enabled")); break;
-    case 0xA4: stream->print(F("Door chime disabled")); break;
-    case 0xA5: stream->print(F("Enter master code")); break;
-    case 0xA6: stream->print(F("*5: Access codes")); break;
-    case 0xA7: stream->print(F("*5: Enter new code")); break;
-    case 0xA9: stream->print(F("*6: User functions")); break;
-    case 0xAA: stream->print(F("*6: Time and Date")); break;
-    case 0xAB: stream->print(F("*6: Auto-arm time")); break;
-    case 0xAC: stream->print(F("*6: Auto-arm enabled")); break;
-    case 0xAD: stream->print(F("*6: Auto-arm disabled")); break;
-    case 0xAF: stream->print(F("*6: System test")); break;
-    case 0xB0: stream->print(F("*6: Enable DLS")); break;
-    case 0xB2: stream->print(F("*7: Command output")); break;
-    case 0xB7: stream->print(F("Enter installer code")); break;
-    case 0xB8: stream->print(F("*  pressed while armed")); break;
-    case 0xB9: stream->print(F("*2: Zone tamper menu")); break;
-    case 0xBA: stream->print(F("*2: Zones with low batteries")); break;
-    case 0xC6: stream->print(F("*2: Zone fault menu")); break;
-    case 0xC8: stream->print(F("*2: Service required menu")); break;
-    case 0xD0: stream->print(F("*2: Handheld keypads with low batteries")); break;
-    case 0xD1: stream->print(F("*2: Wireless keys with low batteries")); break;
-    case 0xE4: stream->print(F("*8: Main menu")); break;
-    case 0xE5: stream->print(F("Keypad slot assignment")); break;
-    case 0xE6: stream->print(F("*8: Input required: 2 digits")); break;
-    case 0xE7: stream->print(F("*8: Input required: 3 digits")); break;
-    case 0xE8: stream->print(F("*8: Input required: 4 digits")); break;
-    case 0xEA: stream->print(F("*8: Reporting code: 2 digits")); break;
-    case 0xEB: stream->print(F("*8: Telephone number account code: 4 digits")); break;
-    case 0xEC: stream->print(F("*8: Input required: 6 digits")); break;
-    case 0xED: stream->print(F("*8: Input required: 32 digits")); break;
-    case 0xEE: stream->print(F("*8: Input required: 1 option per zone")); break;
-    case 0xF0: stream->print(F("Function key 1 programming")); break;
-    case 0xF1: stream->print(F("Function key 2 programming")); break;
-    case 0xF2: stream->print(F("Function key 3 programming")); break;
-    case 0xF3: stream->print(F("Function key 4 programming")); break;
-    case 0xF4: stream->print(F("Function key 5 programming")); break;
-    case 0xF8: stream->print(F("Keypad programming")); break;
+    case 0x01: std::cout << "Partition ready" << std::endl; break;
+    case 0x02: std::cout << "Stay/away zones open" << std::endl; break;
+    case 0x03: std::cout << "Zones open" << std::endl; break;
+    case 0x04: std::cout << "Armed stay" << std::endl; break;
+    case 0x05: std::cout << "Armed away" << std::endl; break;
+    case 0x07: std::cout << "Failed to arm" << std::endl; break;
+    case 0x08: std::cout << "Exit delay in progress" << std::endl; break;
+    case 0x09: std::cout << "Arming with no entry delay" << std::endl; break;
+    case 0x0B: std::cout << "Quick exit in progress" << std::endl; break;
+    case 0x0C: std::cout << "Entry delay in progress" << std::endl; break;
+    case 0x0D: std::cout << "Opening after alarm" << std::endl; break;
+    case 0x10: std::cout << "Keypad lockout" << std::endl; break;
+    case 0x11: std::cout << "Partition in alarm" << std::endl; break;
+    case 0x14: std::cout << "Auto-arm in progress" << std::endl; break;
+    case 0x15: std::cout << "Arming with bypassed zones" << std::endl; break;
+    case 0x16: std::cout << "Armed with no entry delay" << std::endl; break;
+    case 0x22: std::cout << "Recent closing" << std::endl; break;
+    case 0x33: std::cout << "Command output in progress" << std::endl; break;
+    case 0x3D: std::cout << "Disarmed after alarm in memory" << std::endl; break;
+    case 0x3E: std::cout << "Partition disarmed" << std::endl; break;
+    case 0x40: std::cout << "Keypad blanked" << std::endl; break;
+    case 0x8A: std::cout << "Activate stay/away zones" << std::endl; break;
+    case 0x8B: std::cout << "Quick exit" << std::endl; break;
+    case 0x8E: std::cout << "Invalid option" << std::endl; break;
+    case 0x8F: std::cout << "Invalid access code" << std::endl; break;
+    case 0x9E: std::cout << "Enter * function code" << std::endl; break;
+    case 0x9F: std::cout << "Enter access code" << std::endl; break;
+    case 0xA0: std::cout << "*1: Zone bypass programming" << std::endl; break;
+    case 0xA1: std::cout << "*2: Trouble menu" << std::endl; break;
+    case 0xA2: std::cout << "*3: Alarm memory display" << std::endl; break;
+    case 0xA3: std::cout << "Door chime enabled" << std::endl; break;
+    case 0xA4: std::cout << "Door chime disabled" << std::endl; break;
+    case 0xA5: std::cout << "Enter master code" << std::endl; break;
+    case 0xA6: std::cout << "*5: Access codes" << std::endl; break;
+    case 0xA7: std::cout << "*5: Enter new code" << std::endl; break;
+    case 0xA9: std::cout << "*6: User functions" << std::endl; break;
+    case 0xAA: std::cout << "*6: Time and Date" << std::endl; break;
+    case 0xAB: std::cout << "*6: Auto-arm time" << std::endl; break;
+    case 0xAC: std::cout << "*6: Auto-arm enabled" << std::endl; break;
+    case 0xAD: std::cout << "*6: Auto-arm disabled" << std::endl; break;
+    case 0xAF: std::cout << "*6: System test" << std::endl; break;
+    case 0xB0: std::cout << "*6: Enable DLS" << std::endl; break;
+    case 0xB2: std::cout << "*7: Command output" << std::endl; break;
+    case 0xB7: std::cout << "Enter installer code" << std::endl; break;
+    case 0xB8: std::cout << "*  pressed while armed" << std::endl; break;
+    case 0xB9: std::cout << "*2: Zone tamper menu" << std::endl; break;
+    case 0xBA: std::cout << "*2: Zones with low batteries" << std::endl; break;
+    case 0xC6: std::cout << "*2: Zone fault menu" << std::endl; break;
+    case 0xC8: std::cout << "*2: Service required menu" << std::endl; break;
+    case 0xD0: std::cout << "*2: Handheld keypads with low batteries" << std::endl; break;
+    case 0xD1: std::cout << "*2: Wireless keys with low batteries" << std::endl; break;
+    case 0xE4: std::cout << "*8: Main menu" << std::endl; break;
+    case 0xE5: std::cout << "Keypad slot assignment" << std::endl; break;
+    case 0xE6: std::cout << "*8: Input required: 2 digits" << std::endl; break;
+    case 0xE7: std::cout << "*8: Input required: 3 digits" << std::endl; break;
+    case 0xE8: std::cout << "*8: Input required: 4 digits" << std::endl; break;
+    case 0xEA: std::cout << "*8: Reporting code: 2 digits" << std::endl; break;
+    case 0xEB: std::cout << "*8: Telephone number account code: 4 digits" << std::endl; break;
+    case 0xEC: std::cout << "*8: Input required: 6 digits" << std::endl; break;
+    case 0xED: std::cout << "*8: Input required: 32 digits" << std::endl; break;
+    case 0xEE: std::cout << "*8: Input required: 1 option per zone" << std::endl; break;
+    case 0xF0: std::cout << "Function key 1 programming" << std::endl; break;
+    case 0xF1: std::cout << "Function key 2 programming" << std::endl; break;
+    case 0xF2: std::cout << "Function key 3 programming" << std::endl; break;
+    case 0xF3: std::cout << "Function key 4 programming" << std::endl; break;
+    case 0xF4: std::cout << "Function key 5 programming" << std::endl; break;
+    case 0xF8: std::cout << "Keypad programming" << std::endl; break;
     default:
-      stream->print(F("Unrecognized data"));
-      stream->print(F(": 0x"));
-      if (panelData[panelByte] < 10) stream->print(F("0"));
-      stream->print(panelData[panelByte], HEX);
+      std::cout << "Unrecognized data" << std::endl;
+      std::cout << ": 0x" << std::endl;
+      if (panelData[panelByte] < 10) std::cout << "0" << std::endl;
+      std::cout << panelData[panelByte] << std::endl; // HEX value
       break;
   }
 }
 
 
 // Status messages for commands 0xA5, 0xEB
-void dscKeybusInterface::printPanelStatus0(byte panelByte) {
+void dscKeybusInterface::printPanelStatus0(uint8_t panelByte) {
   bool decoded = true;
   switch (panelData[panelByte]) {
     /*
@@ -229,38 +229,38 @@ void dscKeybusInterface::printPanelStatus0(byte panelByte) {
      */
     // 0x09 - 0x28: Zone alarm, zones 1-32
     // 0x29 - 0x48: Zone alarm restored, zones 1-32
-    case 0x49: stream->print(F("Duress alarm")); break;
-    case 0x4A: stream->print(F("Disarmed after alarm in memory")); break;
-    case 0x4B: stream->print(F("Partition in alarm")); break;
-    case 0x4C: stream->print(F("Zone expander supervisory alarm")); break;
-    case 0x4D: stream->print(F("Zone expander supervisory restored")); break;
-    case 0x4E: stream->print(F("Keypad Fire alarm")); break;
-    case 0x4F: stream->print(F("Keypad Aux alarm")); break;
-    case 0x50: stream->print(F("Keypad Panic alarm")); break;
-    case 0x51: stream->print(F("Auxiliary input alarm")); break;
-    case 0x52: stream->print(F("Keypad Fire alarm restored")); break;
-    case 0x53: stream->print(F("Keypad Aux alarm restored")); break;
-    case 0x54: stream->print(F("Keypad Panic alarm restored")); break;
-    case 0x55: stream->print(F("Auxilary input alarm restored")); break;
+    case 0x49: std::cout << "Duress alarm" << std::endl; break;
+    case 0x4A: std::cout << "Disarmed after alarm in memory" << std::endl; break;
+    case 0x4B: std::cout << "Partition in alarm" << std::endl; break;
+    case 0x4C: std::cout << "Zone expander supervisory alarm" << std::endl; break;
+    case 0x4D: std::cout << "Zone expander supervisory restored" << std::endl; break;
+    case 0x4E: std::cout << "Keypad Fire alarm" << std::endl; break;
+    case 0x4F: std::cout << "Keypad Aux alarm" << std::endl; break;
+    case 0x50: std::cout << "Keypad Panic alarm" << std::endl; break;
+    case 0x51: std::cout << "Auxiliary input alarm" << std::endl; break;
+    case 0x52: std::cout << "Keypad Fire alarm restored" << std::endl; break;
+    case 0x53: std::cout << "Keypad Aux alarm restored" << std::endl; break;
+    case 0x54: std::cout << "Keypad Panic alarm restored" << std::endl; break;
+    case 0x55: std::cout << "Auxilary input alarm restored" << std::endl; break;
     // 0x56 - 0x75: Zone tamper, zones 1-32
     // 0x76 - 0x95: Zone tamper restored, zones 1-32
-    case 0x98: stream->print(F("Keypad lockout")); break;
+    case 0x98: std::cout << "Keypad lockout" << std::endl; break;
     // 0x99 - 0xBD: Armed by access code
-    case 0xBE: stream->print(F("Armed partial: Zones bypassed")); break;
-    case 0xBF: stream->print(F("Armed special: quick-arm/auto-arm/keyswitch/wireless key/DLS")); break;
+    case 0xBE: std::cout << "Armed partial: Zones bypassed" << std::endl; break;
+    case 0xBF: std::cout << "Armed special: quick-arm/auto-arm/keyswitch/wireless key/DLS" << std::endl; break;
     // 0xC0 - 0xE4: Disarmed by access code
-    case 0xE5: stream->print(F("Auto-arm cancelled")); break;
-    case 0xE6: stream->print(F("Disarmed special: keyswitch/wireless key/DLS")); break;
-    case 0xE7: stream->print(F("Panel battery trouble")); break;
-    case 0xE8: stream->print(F("Panel AC power failure")); break;
-    case 0xE9: stream->print(F("Bell trouble")); break;
-    case 0xEA: stream->print(F("Power on +16s")); break;
-    case 0xEC: stream->print(F("Telephone line trouble")); break;
-    case 0xEF: stream->print(F("Panel battery restored")); break;
-    case 0xF0: stream->print(F("Panel AC power restored")); break;
-    case 0xF1: stream->print(F("Bell restored")); break;
-    case 0xF4: stream->print(F("Telephone line restored")); break;
-    case 0xFF: stream->print(F("System test")); break;
+    case 0xE5: std::cout << "Auto-arm cancelled" << std::endl; break;
+    case 0xE6: std::cout << "Disarmed special: keyswitch/wireless key/DLS" << std::endl; break;
+    case 0xE7: std::cout << "Panel battery trouble" << std::endl; break;
+    case 0xE8: std::cout << "Panel AC power failure" << std::endl; break;
+    case 0xE9: std::cout << "Bell trouble" << std::endl; break;
+    case 0xEA: std::cout << "Power on +16s" << std::endl; break;
+    case 0xEC: std::cout << "Telephone line trouble" << std::endl; break;
+    case 0xEF: std::cout << "Panel battery restored" << std::endl; break;
+    case 0xF0: std::cout << "Panel AC power restored" << std::endl; break;
+    case 0xF1: std::cout << "Bell restored" << std::endl; break;
+    case 0xF4: std::cout << "Telephone line restored" << std::endl; break;
+    case 0xFF: std::cout << "System test" << std::endl; break;
     default: decoded = false;
   }
   if (decoded) return;
@@ -274,8 +274,8 @@ void dscKeybusInterface::printPanelStatus0(byte panelByte) {
    *  10100101 0 00011000 01001111 10010100 11001000 00010000 11111111 01110111 [0xA5] 03/28/2018 20:50 | Zone alarm: 8
    */
   if (panelData[panelByte] >= 0x09 && panelData[panelByte] <= 0x28) {
-    stream->print(F("Zone alarm: "));
-    stream->print(panelData[panelByte] - 0x08);
+    std::cout << "Zone alarm: " << std::endl;
+    std::cout << panelData[panelByte] - 0x08 << std::endl;
     return;
   }
 
@@ -288,8 +288,8 @@ void dscKeybusInterface::printPanelStatus0(byte panelByte) {
    *  10100101 0 00011000 01001111 10010100 11010000 00110000 11111111 10011111 [0xA5] 03/28/2018 20:52 | Zone alarm restored: 8
    */
   if (panelData[panelByte] >= 0x29 && panelData[panelByte] <= 0x48) {
-    stream->print(F("Zone alarm restored: "));
-    stream->print(panelData[panelByte] - 0x28);
+    std::cout << "Zone alarm restored: " << std::endl;
+    std::cout << panelData[panelByte] - 0x28 << std::endl;
     return;
   }
 
@@ -302,8 +302,8 @@ void dscKeybusInterface::printPanelStatus0(byte panelByte) {
    *  10100101 0 00010001 01101101 01101011 10010000 01011011 11111111 01111000 [0xA5] 11/11/2011 11:36 | Zone tamper: 6
    */
   if (panelData[panelByte] >= 0x56 && panelData[panelByte] <= 0x75) {
-    stream->print(F("Zone tamper: "));
-    stream->print(panelData[6] - 0x55);
+    std::cout << "Zone tamper: " << std::endl;
+    std::cout << panelData[6] - 0x55 << std::endl;
     return;
   }
 
@@ -316,8 +316,8 @@ void dscKeybusInterface::printPanelStatus0(byte panelByte) {
    *  10100101 0 00010001 01101101 01101011 10010000 01111011 11111111 10011000 [0xA5] 11/11/2011 11:36 | Zone tamper restored: 6
    */
   if (panelData[panelByte] >= 0x76 && panelData[panelByte] <= 0x95) {
-    stream->print(F("Zone tamper restored: "));
-    stream->print(panelData[panelByte] - 0x75);
+    std::cout << "Zone tamper restored: " << std::endl;
+    std::cout << panelData[panelByte] - 0x75 << std::endl;
     return;
   }
 
@@ -329,19 +329,19 @@ void dscKeybusInterface::printPanelStatus0(byte panelByte) {
    *  10100101 0 00011000 01001101 00001000 10111100 10111011 11111111 10001000 [0xA5] 03/08/2018 08:47 | Armed by master code 40
    */
   if (panelData[panelByte] >= 0x99 && panelData[panelByte] <= 0xBD) {
-    byte dscCode = panelData[panelByte] - 0x98;
+    uint8_t dscCode = panelData[panelByte] - 0x98;
     if (dscCode >= 35) dscCode += 5;
-    stream->print(F("Armed by "));
+    std::cout << "Armed by " << std::endl;
     switch (dscCode) {
-      case 33: stream->print(F("duress ")); break;
-      case 34: stream->print(F("duress ")); break;
-      case 40: stream->print(F("master ")); break;
-      case 41: stream->print(F("supervisor ")); break;
-      case 42: stream->print(F("supervisor ")); break;
-      default: stream->print(F("user ")); break;
+      case 33: std::cout << "duress " << std::endl; break;
+      case 34: std::cout << "duress " << std::endl; break;
+      case 40: std::cout << "master " << std::endl; break;
+      case 41: std::cout << "supervisor " << std::endl; break;
+      case 42: std::cout << "supervisor " << std::endl; break;
+      default: std::cout << "user " << std::endl; break;
     }
-    stream->print(F("code "));
-    stream->print(dscCode);
+    std::cout << "code " << std::endl;
+    std::cout << dscCode << std::endl;
     return;
   }
 
@@ -353,28 +353,28 @@ void dscKeybusInterface::printPanelStatus0(byte panelByte) {
    *  10100101 0 00011000 01001101 00001000 10110100 11100010 11111111 10100111 [0xA5] 03/08/2018 08:45 | Disarmed by master code 40
    */
   if (panelData[panelByte] >= 0xC0 && panelData[panelByte] <= 0xE4) {
-    byte dscCode = panelData[panelByte] - 0xBF;
+    uint8_t dscCode = panelData[panelByte] - 0xBF;
     if (dscCode >= 35) dscCode += 5;
-    stream->print(F("Disarmed by "));
+    std::cout << "Disarmed by " << std::endl;
     switch (dscCode) {
-      case 33: stream->print(F("duress ")); break;
-      case 34: stream->print(F("duress ")); break;
-      case 40: stream->print(F("master ")); break;
-      case 41: stream->print(F("supervisor ")); break;
-      case 42: stream->print(F("supervisor ")); break;
-      default: stream->print(F("user ")); break;
+      case 33: std::cout << "duress " << std::endl; break;
+      case 34: std::cout << "duress " << std::endl; break;
+      case 40: std::cout << "master " << std::endl; break;
+      case 41: std::cout << "supervisor " << std::endl; break;
+      case 42: std::cout << "supervisor " << std::endl; break;
+      default: std::cout << "user " << std::endl; break;
     }
-    stream->print(F("code "));
-    stream->print(dscCode);
+    std::cout << "code " << std::endl;
+    std::cout << dscCode << std::endl;
     return;
   }
 
-  stream->print(F("Unrecognized data"));
+  std::cout << "Unrecognized data" << std::endl;
 }
 
 
 // Status messages for commands 0xA5, 0xEB
-void dscKeybusInterface::printPanelStatus1(byte panelByte) {
+void dscKeybusInterface::printPanelStatus1(uint8_t panelByte) {
   switch (panelData[panelByte]) {
     /*
      *             YYY1YYY2   MMMMDD DDDHHHHH MMMMMM
@@ -390,20 +390,20 @@ void dscKeybusInterface::printPanelStatus1(byte panelByte) {
      *  10100101 0 00011000 01001101 00001001 11100001 10101101 00000000 10100001 [0xA5] 03/08/2018 09:56 | Enter *8
      *  10100101 0 00010001 01101101 01100010 11001101 11010000 00000000 00100010 [0xA5] 11/11/2011 02:51 | Command output 4
      */
-    case 0x03: stream->print(F("Cross zone alarm")); return;
-    case 0x04: stream->print(F("Delinquency alarm")); return;
-    case 0x24: stream->print(F("Auto-arm cancelled by duress code 33")); return;
-    case 0x25: stream->print(F("Auto-arm cancelled by duress code 34")); return;
-    case 0x26: stream->print(F("Auto-arm cancelled by master code 40")); return;
-    case 0x27: stream->print(F("Auto-arm cancelled by supervisor code 41")); return;
-    case 0x28: stream->print(F("Auto-arm cancelled by supervisor code 42")); return;
-    case 0x2B: stream->print(F("Armed by auto-arm")); return;
+    case 0x03: std::cout << "Cross zone alarm" << std::endl; return;
+    case 0x04: std::cout << "Delinquency alarm" << std::endl; return;
+    case 0x24: std::cout << "Auto-arm cancelled by duress code 33" << std::endl; return;
+    case 0x25: std::cout << "Auto-arm cancelled by duress code 34" << std::endl; return;
+    case 0x26: std::cout << "Auto-arm cancelled by master code 40" << std::endl; return;
+    case 0x27: std::cout << "Auto-arm cancelled by supervisor code 41" << std::endl; return;
+    case 0x28: std::cout << "Auto-arm cancelled by supervisor code 42" << std::endl; return;
+    case 0x2B: std::cout << "Armed by auto-arm" << std::endl; return;
     // 0x6C - 0x8B: Zone fault restored, zones 1-32
     // 0x8C - 0xAB: Zone fault, zones 1-32
-    case 0xAC: stream->print(F("Exit *8 programming")); return;
-    case 0xAD: stream->print(F("Enter *8 programming")); return;
+    case 0xAC: std::cout << "Exit *8 programming" << std::endl; return;
+    case 0xAD: std::cout << "Enter *8 programming" << std::endl; return;
     // 0xB0 - 0xCF: Zones bypassed, zones 1-32
-    case 0xD0: stream->print(F("Command output 4")); return;
+    case 0xD0: std::cout << "Command output 4" << std::endl; return;
   }
 
   /*
@@ -416,8 +416,8 @@ void dscKeybusInterface::printPanelStatus1(byte panelByte) {
    *  10100101 0 00010001 01101101 01101011 10001001 01110000 11111111 10000110 [0xA5] 11/11/2011 11:34 | Zone fault restored: 5
    */
   if (panelData[panelByte] >= 0x6C && panelData[panelByte] <= 0x8B) {
-    stream->print(F("Zone fault restored: "));
-    stream->print(panelData[panelByte] - 0x6B);
+    std::cout << "Zone fault restored: " << std::endl;
+    std::cout << panelData[panelByte] - 0x6B << std::endl;
     return;
   }
 
@@ -431,8 +431,8 @@ void dscKeybusInterface::printPanelStatus1(byte panelByte) {
    *  10100101 0 00010001 01101101 01101011 10001001 10010000 11111111 10100110 [0xA5] 11/11/2011 11:34 | Zone fault: 4
    */
   if (panelData[panelByte] >= 0x8C && panelData[panelByte] <= 0xAB) {
-    stream->print(F("Zone fault: "));
-    stream->print(panelData[panelByte] - 0x8B);
+    std::cout << "Zone fault: " << std::endl;
+    std::cout << panelData[panelByte] - 0x8B << std::endl;
     return;
   }
 
@@ -444,17 +444,17 @@ void dscKeybusInterface::printPanelStatus1(byte panelByte) {
    *  10100101 0 00011000 01001111 10110001 11000001 10110101 00000000 00110011 [0xA5] 03/29/2018 17:48 | Zone bypassed: 6
    */
   if (panelData[panelByte] >= 0xB0 && panelData[panelByte] <= 0xCF) {
-    stream->print(F("Zone bypassed: "));
-    stream->print(panelData[panelByte] - 0xAF);
+    std::cout << "Zone bypassed: " << std::endl;
+    std::cout << panelData[panelByte] - 0xAF << std::endl;
     return;
   }
 
-  stream->print(F("Unrecognized data"));
+  std::cout << "Unrecognized data" << std::endl;
 }
 
 
 // Status messages for commands 0xA5, 0xEB
-void dscKeybusInterface::printPanelStatus2(byte panelByte) {
+void dscKeybusInterface::printPanelStatus2(uint8_t panelByte) {
   switch (panelData[panelByte]) {
 
     /*
@@ -476,26 +476,26 @@ void dscKeybusInterface::printPanelStatus2(byte panelByte) {
      *  10100101 0 00011000 01001111 00101100 11011110 11000011 00000000 11011001 [0xA5] 03/25/2018 12:55 | Enter *5 programming
      *  10100101 0 00011000 01001111 00101110 00000010 11100110 00000000 00100010 [0xA5] 03/25/2018 14:00 | Enter *6 programming
      */
-    case 0x2A: stream->print(F("Quick exit")); return;
-    case 0x63: stream->print(F("Keybus fault restored")); return;
-    case 0x66: stream->print(F("Enter *1 zone bypass programming")); return;
-    case 0x67: stream->print(F("Command output 1")); return;
-    case 0x68: stream->print(F("Command output 2")); return;
-    case 0x69: stream->print(F("Command output 3")); return;
-    case 0x8C: stream->print(F("Loss of system time")); return;
-    case 0x8D: stream->print(F("Power on")); return;
-    case 0x8E: stream->print(F("Panel factory default")); return;
-    case 0x93: stream->print(F("Disarmed by keyswitch")); return;
-    case 0x96: stream->print(F("Armed by keyswitch")); return;
-    case 0x97: stream->print(F("Armed by keypad away")); return;
-    case 0x98: stream->print(F("Armed by quick-arm")); return;
-    case 0x99: stream->print(F("Activate stay/away zones")); return;
-    case 0x9A: stream->print(F("Armed: stay")); return;
-    case 0x9B: stream->print(F("Armed: away")); return;
-    case 0x9C: stream->print(F("Armed without entry delay")); return;
-    case 0xC3: stream->print(F("Enter *5 programming")); return;
+    case 0x2A: std::cout << "Quick exit" << std::endl; return;
+    case 0x63: std::cout << "Keybus fault restored" << std::endl; return;
+    case 0x66: std::cout << "Enter *1 zone bypass programming" << std::endl; return;
+    case 0x67: std::cout << "Command output 1" << std::endl; return;
+    case 0x68: std::cout << "Command output 2" << std::endl; return;
+    case 0x69: std::cout << "Command output 3" << std::endl; return;
+    case 0x8C: std::cout << "Loss of system time" << std::endl; return;
+    case 0x8D: std::cout << "Power on" << std::endl; return;
+    case 0x8E: std::cout << "Panel factory default" << std::endl; return;
+    case 0x93: std::cout << "Disarmed by keyswitch" << std::endl; return;
+    case 0x96: std::cout << "Armed by keyswitch" << std::endl; return;
+    case 0x97: std::cout << "Armed by keypad away" << std::endl; return;
+    case 0x98: std::cout << "Armed by quick-arm" << std::endl; return;
+    case 0x99: std::cout << "Activate stay/away zones" << std::endl; return;
+    case 0x9A: std::cout << "Armed: stay" << std::endl; return;
+    case 0x9B: std::cout << "Armed: away" << std::endl; return;
+    case 0x9C: std::cout << "Armed without entry delay" << std::endl; return;
+    case 0xC3: std::cout << "Enter *5 programming" << std::endl; return;
     // 0xC6 - 0xE5: Auto-arm cancelled by user code
-    case 0xE6: stream->print(F("Enter *6 programming")); return;
+    case 0xE6: std::cout << "Enter *6 programming" << std::endl; return;
     // 0xE9 - 0xF0: Supervisory restored, keypad slots 1-8
     // 0xF1 - 0xF8: Supervisory trouble, keypad slots 1-8
   }
@@ -508,8 +508,8 @@ void dscKeybusInterface::printPanelStatus2(byte panelByte) {
    *  10100101 0 00010001 01101101 01100000 01111010 11100101 00000000 11100010 [0xA5] 11/11/2011 00:30 | Auto-arm cancelled by user code 32
    */
   if (panelData[panelByte] >= 0xC6 && panelData[panelByte] <= 0xE5) {
-    stream->print(F("Auto-arm cancelled by user code "));
-    stream->print(panelData[panelByte] - 0xC5);
+    std::cout << "Auto-arm cancelled by user code " << std::endl;
+    std::cout << panelData[panelByte] - 0xC5 << std::endl;
     return;
   }
 
@@ -521,8 +521,8 @@ void dscKeybusInterface::printPanelStatus2(byte panelByte) {
    *  10100101 0 00010001 01101101 01110100 00110010 11110000 11111111 10111000 [0xA5] 11/11/2011 20:12 | Supervisory - module detected: Keypad slot 8
    */
   if (panelData[panelByte] >= 0xE9 && panelData[panelByte] <= 0xF0) {
-    stream->print(F("Supervisory - module detected: Keypad slot "));
-    stream->print(panelData[panelByte] - 0xE8);
+    std::cout << "Supervisory - module detected: Keypad slot " << std::endl;
+    std::cout << panelData[panelByte] - 0xE8 << std::endl;
     return;
   }
 
@@ -534,79 +534,79 @@ void dscKeybusInterface::printPanelStatus2(byte panelByte) {
    *  10100101 0 00010001 01101101 01110100 00101110 11111000 11111111 10111100 [0xA5] 11/11/2011 20:11 | Supervisory - module trouble: Keypad slot 8
    */
   if (panelData[panelByte] >= 0xF1 && panelData[panelByte] <= 0xF8) {
-    stream->print(F("Supervisory - module trouble: Keypad slot "));
-    stream->print(panelData[panelByte] - 0xF0);
+    std::cout << "Supervisory - module trouble: Keypad slot " << std::endl;
+    std::cout << panelData[panelByte] - 0xF0 << std::endl;
     return;
   }
 
-  stream->print(F("Unrecognized data"));
+  std::cout << "Unrecognized data" << std::endl;
 }
 
 
 // Status messages for commands 0xA5, 0xEB
-void dscKeybusInterface::printPanelStatus3(byte panelByte) {
-  stream->print(F("Unrecognized data"));
-  stream->print(F(" :"));
-  stream->print(panelByte, HEX);
+void dscKeybusInterface::printPanelStatus3(uint8_t panelByte) {
+  std::cout << "Unrecognized data" << std::endl;
+  std::cout << " :" << std::endl;
+  std::cout << panelByte << std::endl; // HEX Value
 }
 
 
 // Status messages for command 0xEB
-void dscKeybusInterface::printPanelStatus4(byte panelByte) {
+void dscKeybusInterface::printPanelStatus4(uint8_t panelByte) {
   if (panelData[panelByte] <= 0x1F) {
-    stream->print(F("Zone alarm: "));
-    stream->print(panelData[panelByte] + 33);
+    std::cout << "Zone alarm: " << std::endl;
+    std::cout << panelData[panelByte] + 33 << std::endl;
     return;
   }
 
   if (panelData[panelByte] >= 0x20 && panelData[panelByte] <= 0x3F) {
-    stream->print(F("Zone alarm restored: "));
-    stream->print(panelData[panelByte] + 1);
+    std::cout << "Zone alarm restored: " << std::endl;
+    std::cout << panelData[panelByte] + 1 << std::endl;
     return;
   }
 
   if (panelData[panelByte] >= 0x40 && panelData[panelByte] <= 0x5F) {
-    stream->print(F("Zone tamper: "));
-    stream->print(panelData[panelByte] - 31);
+    std::cout << "Zone tamper: " << std::endl;
+    std::cout << panelData[panelByte] - 31 << std::endl;
     return;
   }
 
   if (panelData[panelByte] >= 0x60 && panelData[panelByte] <= 0x7F) {
-    stream->print(F("Zone tamper restored: "));
-    stream->print(panelData[panelByte] - 63);
+    std::cout << "Zone tamper restored: " << std::endl;
+    std::cout << panelData[panelByte] - 63 << std::endl;
     return;
   }
 
 
-  stream->print(F("Unrecognized data"));
+  std::cout << "Unrecognized data" << std::endl;
 }
 
 
 // Status messages for command 0xEB
-void dscKeybusInterface::printPanelStatus14(byte panelByte) {
+void dscKeybusInterface::printPanelStatus14(uint8_t panelByte) {
   if (panelData[panelByte] >= 0x40 && panelData[panelByte] <= 0x5F) {
-    stream->print(F("Zone fault restored: "));
-    stream->print(panelData[panelByte] - 31);
+    std::cout << "Zone fault restored: " << std::endl;
+    std::cout << panelData[panelByte] - 31 << std::endl;
     return;
   }
 
   if (panelData[panelByte] >= 0x60 && panelData[panelByte] <= 0x7F) {
-    stream->print(F("Zone fault: "));
-    stream->print(panelData[panelByte] - 63);
+    std::cout << "Zone fault: " << std::endl;
+    std::cout << panelData[panelByte] - 63 << std::endl;
     return;
   }
 
 
-  stream->print(F("Unrecognized data"));
+  std::cout << "Unrecognized data" << std::endl;
 }
 
 
 // Prints individual bits as a number for partitions and zones
-void dscKeybusInterface::printPanelBitNumbers(byte panelByte, byte startNumber) {
-  for (byte bit = 0; bit < 8; bit++) {
+void dscKeybusInterface::printPanelBitNumbers(uint8_t panelByte, uint8_t startNumber) {
+  for (uint8_t bit = 0; bit < 8; bit++) {
     if (bitRead(panelData[panelByte],bit)) {
-      stream->print(startNumber + bit);
-      stream->print(F(" "));
+      std::cout << startNumber + bit << std::endl;
+      std::cout << " " << std::endl;
     }
   }
 }
@@ -653,39 +653,39 @@ void dscKeybusInterface::printPanelBitNumbers(byte panelByte, byte startNumber) 
  *  00000101 0 10000000 00000011 10000010 00000101 10000010 00000101 00000000 11000111 [0x05] Status lights: Backlight | Zones open
  */
 void dscKeybusInterface::printPanel_0x05() {
-  stream->print(F("Partition 1: "));
+  std::cout << "Partition 1: " << std::endl;
   printPanelLights(2);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(3);
 
   if (panelData[5] == 0xC7) {
-    stream->print(F(" | Partition 2: disabled"));
+    std::cout << " | Partition 2: disabled" << std::endl;
   }
   else {
-    stream->print(F(" | Partition 2: "));
+    std::cout << " | Partition 2: " << std::endl;
     printPanelLights(4);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(5);
   }
 
   if (panelByteCount > 9) {
     if (panelData[7] == 0xC7) {
-      stream->print(F(" | Partition 3: disabled"));
+      std::cout << " | Partition 3: disabled" << std::endl;
     }
     else {
-      stream->print(F(" | Partition 3: "));
+      std::cout << " | Partition 3: " << std::endl;
       printPanelLights(6);
-      stream->print(F("- "));
+      std::cout << "- " << std::endl;
       printPanelMessages(7);
     }
 
     if (panelData[9] == 0xC7) {
-      stream->print(F(" | Partition 4: disabled"));
+      std::cout << " | Partition 4: disabled" << std::endl;
     }
     else {
-      stream->print(F(" | Partition 4: "));
+      std::cout << " | Partition 4: " << std::endl;
       printPanelLights(8);
-      stream->print(F("- "));
+      std::cout << "- " << std::endl;
       printPanelMessages(9);
     }
   }
@@ -706,23 +706,23 @@ void dscKeybusInterface::printPanel_0x05() {
  */
 void dscKeybusInterface::printPanel_0x0A() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
   printPanelLights(2);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(3);
 
   bool zoneLights = false;
-  stream->print(F(" | Zone lights: "));
-  for (byte panelByte = 4; panelByte < 8; panelByte++) {
+  std::cout << " | Zone lights: " << std::endl;
+  for (uint8_t panelByte = 4; panelByte < 8; panelByte++) {
     if (panelData[panelByte] != 0) {
       zoneLights = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 1) + ((panelByte-4) *  8));
-          stream->print(" ");
+          std::cout << (zoneBit + 1) + ((panelByte-4) *  8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
@@ -730,13 +730,13 @@ void dscKeybusInterface::printPanel_0x0A() {
 
   if (panelData[8] != 0 && panelData[8] != 128) {
     zoneLights = true;
-    if (bitRead(panelData[8],0)) stream->print(F("33 "));
-    if (bitRead(panelData[8],1)) stream->print(F("34 "));
-    if (bitRead(panelData[8],3)) stream->print(F("41 "));
-    if (bitRead(panelData[8],4)) stream->print(F("42 "));
+    if (bitRead(panelData[8],0)) std::cout << "33 " << std::endl;
+    if (bitRead(panelData[8],1)) std::cout << "34 " << std::endl;
+    if (bitRead(panelData[8],3)) std::cout << "41 " << std::endl;
+    if (bitRead(panelData[8],4)) std::cout << "42 " << std::endl;
   }
 
-  if (!zoneLights) stream->print(F("none"));
+  if (!zoneLights) std::cout << "none" << std::endl;
 }
 
 
@@ -750,7 +750,7 @@ void dscKeybusInterface::printPanel_0x0A() {
  *  11111111 1 11111111 11111100 11111111 11111111 11111111 [Keypad] Slot 8
  */
 void dscKeybusInterface::printPanel_0x11() {
-  stream->print(F("Keypad slot query"));
+  std::cout << "Keypad slot query" << std::endl;
 }
 
 
@@ -775,36 +775,36 @@ void dscKeybusInterface::printPanel_0x11() {
  */
 void dscKeybusInterface::printPanel_0x16() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
   if (panelData[2] == 0x0E) {
 
     switch (panelData[3]) {
-      case 0x10: stream->print(F("PC5015 ")); break;
-      case 0x23: stream->print(F("PC1555MX ")); break;
-      case 0x42: stream->print(F("PC1832/1864 ")); break;
-      default: stream->print(F("Unknown panel ")); break;
+      case 0x10: std::cout << "PC5015 " << std::endl; break;
+      case 0x23: std::cout << "PC1555MX " << std::endl; break;
+      case 0x42: std::cout << "PC1832/1864 " << std::endl; break;
+      default: std::cout << "Unknown panel " << std::endl; break;
     }
 
     switch (panelData[4] & 0x03) {
-      case 0x01: stream->print(F("| Zone wiring: NC ")); break;
-      case 0x02: stream->print(F("| Zone wiring: EOL ")); break;
-      case 0x03: stream->print(F("| Zone wiring: DEOL ")); break;
+      case 0x01: std::cout << "| Zone wiring: NC " << std::endl; break;
+      case 0x02: std::cout << "| Zone wiring: EOL " << std::endl; break;
+      case 0x03: std::cout << "| Zone wiring: DEOL " << std::endl; break;
     }
 
     switch (panelData[4] >> 2) {
-      case 0x2C: stream->print(F("| Armed")); break;
-      case 0x2D: stream->print(F("| Interval 4m")); break;
-      case 0x34: stream->print(F("| Exit *8 programming")); break;
-      case 0x39: stream->print(F("| *8 programming")); break;
-      case 0x3C: stream->print(F("| Armed, Exit *8 +15s, Power-on +2m")); break;
-      case 0x3D: stream->print(F("| Interval 4m")); break;
-      default: stream->print(F("| Unrecognized data")); break;
+      case 0x2C: std::cout << "| Armed" << std::endl; break;
+      case 0x2D: std::cout << "| Interval 4m" << std::endl; break;
+      case 0x34: std::cout << "| Exit *8 programming" << std::endl; break;
+      case 0x39: std::cout << "| *8 programming" << std::endl; break;
+      case 0x3C: std::cout << "| Armed, Exit *8 +15s, Power-on +2m" << std::endl; break;
+      case 0x3D: std::cout << "| Interval 4m" << std::endl; break;
+      default: std::cout << "| Unrecognized data" << std::endl; break;
     }
   }
-  else stream->print(F("Unrecognized data"));
+  else std::cout << "Unrecognized data" << std::endl;
 }
 
 
@@ -826,42 +826,42 @@ void dscKeybusInterface::printPanel_0x16() {
 void dscKeybusInterface::printPanel_0x1B() {
 
   if (panelData[3] == 0xC7) {
-    stream->print(F("Partition 5: disabled"));
+    std::cout << "Partition 5: disabled" << std::endl;
   }
   else {
-    stream->print(F("Partition 5: "));
+    std::cout << "Partition 5: " << std::endl;
     printPanelLights(2);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(3);
   }
 
   if (panelData[5] == 0xC7) {
-    stream->print(F(" | Partition 6: disabled"));
+    std::cout << " | Partition 6: disabled" << std::endl;
   }
   else {
-    stream->print(F(" | Partition 6: "));
+    std::cout << " | Partition 6: " << std::endl;
     printPanelLights(4);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(5);
   }
 
   if (panelData[7] == 0xC7) {
-    stream->print(F(" | Partition 7: disabled"));
+    std::cout << " | Partition 7: disabled" << std::endl;
   }
   else {
-    stream->print(F(" | Partition 7: "));
+    std::cout << " | Partition 7: " << std::endl;
     printPanelLights(6);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(7);
   }
 
   if (panelData[9] == 0xC7) {
-    stream->print(F(" | Partition 8: disabled"));
+    std::cout << " | Partition 8: disabled" << std::endl;
   }
   else {
-    stream->print(F(" | Partition 8: "));
+    std::cout << " | Partition 8: " << std::endl;
     printPanelLights(8);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(9);
   }
 }
@@ -877,7 +877,7 @@ void dscKeybusInterface::printPanel_0x1B() {
  *  01110111 1  [Keypad] Fire alarm
  */
 void dscKeybusInterface::printPanel_0x1C() {
-  stream->print(F("Verify keypad Fire/Auxiliary/Panic"));
+  std::cout << "Verify keypad Fire/Auxiliary/Panic" << std::endl;
 }
 
 
@@ -910,27 +910,27 @@ void dscKeybusInterface::printPanel_0x1C() {
  */
 void dscKeybusInterface::printPanel_0x27() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 1: "));
+  std::cout << "Partition 1: " << std::endl;
   printPanelLights(2);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(3);
 
   if (panelData[5] == 0xC7) {
-    stream->print(F(" | Partition 2: disabled"));
+    std::cout << " | Partition 2: disabled" << std::endl;
   }
   else if (panelData[5] != 0xFF) {
-    stream->print(F(" | Partition 2: "));
+    std::cout << " | Partition 2: " << std::endl;
     printPanelLights(4);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(5);
   }
 
-  stream->print(F(" | Zones 1-8 open: "));
-  if (panelData[6] == 0) stream->print(F("none"));
+  std::cout << " | Zones 1-8 open: " << std::endl;
+  if (panelData[6] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(6,1);
   }
@@ -946,7 +946,7 @@ void dscKeybusInterface::printPanel_0x27() {
  *  11111111 1 01010111 01010101 11111111 11111111 01101111 [Zone Expander] Status
  */
 void dscKeybusInterface::printPanel_0x28() {
-  stream->print(F("Zone expander query"));
+  std::cout << "Zone expander query" << std::endl;
 }
 
 
@@ -965,27 +965,27 @@ void dscKeybusInterface::printPanel_0x28() {
  */
 void dscKeybusInterface::printPanel_0x2D() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 1: "));
+  std::cout << "Partition 1: " << std::endl;
   printPanelLights(2);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(3);
 
   if (panelData[5] == 0xC7) {
-    stream->print(F(" | Partition 2: disabled"));
+    std::cout << " | Partition 2: disabled" << std::endl;
   }
   else if (panelData[5] != 0xFF) {
-    stream->print(F(" | Partition 2: "));
+    std::cout << " | Partition 2: " << std::endl;
     printPanelLights(4);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(5);
   }
 
-  stream->print(F(" | Zones 9-16 open: "));
-  if (panelData[6] == 0) stream->print(F("none"));
+  std::cout << " | Zones 9-16 open: " << std::endl;
+  if (panelData[6] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(6,9);
   }
@@ -1004,27 +1004,27 @@ void dscKeybusInterface::printPanel_0x2D() {
  */
 void dscKeybusInterface::printPanel_0x34() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 1: "));
+  std::cout << "Partition 1: " << std::endl;
   printPanelLights(2);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(3);
 
   if (panelData[5] == 0xC7) {
-    stream->print(F(" | Partition 2: disabled"));
+    std::cout << " | Partition 2: disabled" << std::endl;
   }
   else if (panelData[5] != 0xFF) {
-    stream->print(F(" | Partition 2: "));
+    std::cout << " | Partition 2: " << std::endl;
     printPanelLights(4);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(5);
   }
 
-  stream->print(F(" | Zones 17-24 open: "));
-  if (panelData[6] == 0) stream->print(F("none"));
+  std::cout << " | Zones 17-24 open: " << std::endl;
+  if (panelData[6] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(6,17);
   }
@@ -1043,27 +1043,27 @@ void dscKeybusInterface::printPanel_0x34() {
  */
 void dscKeybusInterface::printPanel_0x3E() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 1: "));
+  std::cout << "Partition 1: " << std::endl;
   printPanelLights(2);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(3);
 
   if (panelData[5] == 0xC7) {
-    stream->print(F(" | Partition 2: disabled"));
+    std::cout << " | Partition 2: disabled" << std::endl;
   }
   else if (panelData[5] != 0xFF) {
-    stream->print(F(" | Partition 2: "));
+    std::cout << " | Partition 2: " << std::endl;
     printPanelLights(4);
-    stream->print(F("- "));
+    std::cout << "- " << std::endl;
     printPanelMessages(5);
   }
 
-  stream->print(F(" | Zones 25-32 open: "));
-  if (panelData[6] == 0) stream->print(F("none"));
+  std::cout << " | Zones 25-32 open: " << std::endl;
+  if (panelData[6] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(6,25);
   }
@@ -1079,7 +1079,7 @@ void dscKeybusInterface::printPanel_0x3E() {
  *  01001100 0 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 [0x4C] Keybus query
  */
 void dscKeybusInterface::printPanel_0x4C() {
-  stream->print(F("Keybus query"));
+  std::cout << "Keybus query" << std::endl;
 }
 
 
@@ -1094,7 +1094,7 @@ void dscKeybusInterface::printPanel_0x4C() {
  *  10100101 0 00011000 01010101 01000000 11010111 10110011 11111111 11011011 [0xA5] 05/10/2018 00:53 | Unrecognized data, add to 0xA5_Byte7_0xFF, Byte 6: 0xB3
  */
 void dscKeybusInterface::printPanel_0x58() {
-  stream->print(F("Keybus query"));
+  std::cout << "Keybus query" << std::endl;
 }
 
 
@@ -1116,27 +1116,27 @@ void dscKeybusInterface::printPanel_0x58() {
  */
 void dscKeybusInterface::printPanel_0x5D() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 1 | Status lights flashing: "));
+  std::cout << "Partition 1 | Status lights flashing: " << std::endl;
   printPanelLights(2);
 
   bool zoneLights = false;
-  stream->print(F("| Zones 1-32 flashing: "));
-  for (byte panelByte = 3; panelByte <= 6; panelByte++) {
+  std::cout << "| Zones 1-32 flashing: " << std::endl;
+  for (uint8_t panelByte = 3; panelByte <= 6; panelByte++) {
     if (panelData[panelByte] != 0) {
       zoneLights = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 1) + ((panelByte-3) *  8));
-          stream->print(" ");
+          std::cout << (zoneBit + 1) + ((panelByte-3) *  8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
-  if (!zoneLights) stream->print(F("none"));
+  if (!zoneLights) std::cout << "none" << std::endl;
 }
 
 
@@ -1155,27 +1155,27 @@ void dscKeybusInterface::printPanel_0x5D() {
  */
 void dscKeybusInterface::printPanel_0x63() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 2 | Status lights flashing: "));
+  std::cout << "Partition 2 | Status lights flashing: " << std::endl;
   printPanelLights(2);
 
   bool zoneLights = false;
-  stream->print(F("| Zones 1-32 flashing: "));
-  for (byte panelByte = 3; panelByte <= 6; panelByte++) {
+  std::cout << "| Zones 1-32 flashing: " << std::endl;
+  for (uint8_t panelByte = 3; panelByte <= 6; panelByte++) {
     if (panelData[panelByte] != 0) {
       zoneLights = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 1) + ((panelByte-3) *  8));
-          stream->print(" ");
+          std::cout << (zoneBit + 1) + ((panelByte-3) *  8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
-  if (!zoneLights) stream->print(F("none"));
+  if (!zoneLights) std::cout << "none" << std::endl;
 }
 
 
@@ -1187,17 +1187,17 @@ void dscKeybusInterface::printPanel_0x63() {
  */
 void dscKeybusInterface::printPanel_0x64() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 1 | Beep: "));
+  std::cout << "Partition 1 | Beep: " << std::endl;
   switch (panelData[2]) {
-    case 0x04: stream->print(F("2 beeps")); break;
-    case 0x06: stream->print(F("3 beeps")); break;
-    case 0x08: stream->print(F("4 beeps")); break;
-    case 0x0C: stream->print(F("6 beeps")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x04: std::cout << "2 beeps" << std::endl; break;
+    case 0x06: std::cout << "3 beeps" << std::endl; break;
+    case 0x08: std::cout << "4 beeps" << std::endl; break;
+    case 0x0C: std::cout << "6 beeps" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
@@ -1210,17 +1210,17 @@ void dscKeybusInterface::printPanel_0x64() {
  */
 void dscKeybusInterface::printPanel_0x69() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 2 | Beep: "));
+  std::cout << "Partition 2 | Beep: " << std::endl;
   switch (panelData[2]) {
-    case 0x04: stream->print(F("2 beeps")); break;
-    case 0x06: stream->print(F("3 beeps")); break;
-    case 0x08: stream->print(F("4 beeps")); break;
-    case 0x0C: stream->print(F("6 beeps")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x04: std::cout << "2 beeps" << std::endl; break;
+    case 0x06: std::cout << "3 beeps" << std::endl; break;
+    case 0x08: std::cout << "4 beeps" << std::endl; break;
+    case 0x0C: std::cout << "6 beeps" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
@@ -1234,18 +1234,18 @@ void dscKeybusInterface::printPanel_0x69() {
  */
 void dscKeybusInterface::printPanel_0x75() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 1 | Beep pattern: "));
+  std::cout << "Partition 1 | Beep pattern: " << std::endl;
   switch (panelData[2]) {
-    case 0x00: stream->print(F("off")); break;
-    case 0x11: stream->print(F("single beep (exit delay)")); break;
-    case 0x31: stream->print(F("triple beep (exit delay)")); break;
-    case 0x80: stream->print(F("solid tone")); break;
-    case 0xB1: stream->print(F("triple beep (entrance delay)")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x00: std::cout << "off" << std::endl; break;
+    case 0x11: std::cout << "single beep (exit delay)" << std::endl; break;
+    case 0x31: std::cout << "triple beep (exit delay)" << std::endl; break;
+    case 0x80: std::cout << "solid tone" << std::endl; break;
+    case 0xB1: std::cout << "triple beep (entrance delay)" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
@@ -1258,18 +1258,18 @@ void dscKeybusInterface::printPanel_0x75() {
  */
 void dscKeybusInterface::printPanel_0x7A() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 2 | Beep pattern: "));
+  std::cout << "Partition 2 | Beep pattern: " << std::endl;
   switch (panelData[2]) {
-    case 0x00: stream->print(F("off")); break;
-    case 0x11: stream->print(F("single beep (exit delay)")); break;
-    case 0x31: stream->print(F("triple beep (exit delay)")); break;
-    case 0x80: stream->print(F("solid tone")); break;
-    case 0xB1: stream->print(F("triple beep (entrance delay)")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x00: std::cout << "off" << std::endl; break;
+    case 0x11: std::cout << "single beep (exit delay)" << std::endl; break;
+    case 0x31: std::cout << "triple beep (exit delay)" << std::endl; break;
+    case 0x80: std::cout << "solid tone" << std::endl; break;
+    case 0xB1: std::cout << "triple beep (entrance delay)" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
@@ -1282,15 +1282,15 @@ void dscKeybusInterface::printPanel_0x7A() {
  */
 void dscKeybusInterface::printPanel_0x7F() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 1 | "));
+  std::cout << "Partition 1 | " << std::endl;
   switch (panelData[2]) {
-    case 0x01: stream->print(F("Beep: long beep")); break;
-    case 0x02: stream->print(F("Beep: long beep | Failed to arm")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x01: std::cout << "Beep: long beep" << std::endl; break;
+    case 0x02: std::cout << "Beep: long beep | Failed to arm" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
@@ -1303,15 +1303,15 @@ void dscKeybusInterface::printPanel_0x7F() {
  */
 void dscKeybusInterface::printPanel_0x82() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Partition 2 | "));
+  std::cout << "Partition 2 | " << std::endl;
   switch (panelData[2]) {
-    case 0x01: stream->print(F("Beep: long beep")); break;
-    case 0x02: stream->print(F("Beep: long beep | Failed to arm")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x01: std::cout << "Beep: long beep" << std::endl; break;
+    case 0x02: std::cout << "Beep: long beep | Failed to arm" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
@@ -1328,31 +1328,31 @@ void dscKeybusInterface::printPanel_0x82() {
  */
 void dscKeybusInterface::printPanel_0x87() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Panel output:"));
+  std::cout << "Panel output:" << std::endl;
   switch (panelData[2] & 0xF0) {
-    case 0xF0: stream->print(F(" Bell on")); break;
-    default: stream->print(F(" Bell off")); break;
+    case 0xF0: std::cout << " Bell on" << std::endl; break;
+    default: std::cout << " Bell off" << std::endl; break;
   }
 
   if ((panelData[3] & 0x0F) <= 0x03) {
-    if (bitRead(panelData[3],0)) stream->print(F(" | PGM1 on"));
-    else stream->print(F(" | PGM1 off"));
+    if (bitRead(panelData[3],0)) std::cout << " | PGM1 on" << std::endl;
+    else std::cout << " | PGM1 off" << std::endl;
 
-    if (bitRead(panelData[3],1)) stream->print(F(" | PGM2 on"));
-    else stream->print(F(" | PGM2 off"));
+    if (bitRead(panelData[3],1)) std::cout << " | PGM2 on" << std::endl;
+    else std::cout << " | PGM2 off" << std::endl;
   }
-  else stream->print(F(" | Unrecognized data"));
+  else std::cout << " | Unrecognized data" << std::endl;
 
   if ((panelData[2] & 0x0F) != 0x0F) {
-    if (bitRead(panelData[2],0)) stream->print(F(" | PGM3 on"));
-    else stream->print(F(" | PGM3 off"));
+    if (bitRead(panelData[2],0)) std::cout << " | PGM3 on" << std::endl;
+    else std::cout << " | PGM3 off" << std::endl;
 
-    if (bitRead(panelData[2],1)) stream->print(F(" | PGM4 on"));
-    else stream->print(F(" | PGM4 off"));
+    if (bitRead(panelData[2],1)) std::cout << " | PGM4 on" << std::endl;
+    else std::cout << " | PGM4 off" << std::endl;
   }
 }
 
@@ -1379,11 +1379,11 @@ void dscKeybusInterface::printPanel_0x87() {
  */
 void dscKeybusInterface::printPanel_0x8D() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("User code programming key response"));
+  std::cout << "User code programming key response" << std::endl;
 }
 
 
@@ -1405,9 +1405,9 @@ void dscKeybusInterface::printPanel_0x8D() {
  */
 void dscKeybusInterface::printPanel_0x94() {
   switch (panelData[9]) {
-    case 0x17: stream->print(F("Unknown command 1")); break;
-    case 0x4C: stream->print(F("Unknown command 2")); break;
-    default: stream->print(F("Unrecognized data"));
+    case 0x17: std::cout << "Unknown command 1" << std::endl; break;
+    case 0x4C: std::cout << "Unknown command 2" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl;
   }
 }
 
@@ -1418,7 +1418,7 @@ void dscKeybusInterface::printPanel_0x94() {
  */
 void dscKeybusInterface::printPanel_0xA5() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
@@ -1428,41 +1428,41 @@ void dscKeybusInterface::printPanel_0xA5() {
    *             YYY1YYY2   MMMMDD DDDHHHHH MMMMMM
    *  10100101 0 00011000 00001110 11101101 10000000 00000000 00000000 00111000 [0xA5] 03/23/2018 13:32 | Timestamp
    */
-  byte dscYear3 = panelData[2] >> 4;
-  byte dscYear4 = panelData[2] & 0x0F;
-  byte dscMonth = panelData[3] << 2; dscMonth >>=4;
-  byte dscDay1 = panelData[3] << 6; dscDay1 >>= 3;
-  byte dscDay2 = panelData[4] >> 5;
-  byte dscDay = dscDay1 | dscDay2;
-  byte dscHour = panelData[4] & 0x1F;
-  byte dscMinute = panelData[5] >> 2;
+  uint8_t dscYear3 = panelData[2] >> 4;
+  uint8_t dscYear4 = panelData[2] & 0x0F;
+  uint8_t dscMonth = panelData[3] << 2; dscMonth >>=4;
+  uint8_t dscDay1 = panelData[3] << 6; dscDay1 >>= 3;
+  uint8_t dscDay2 = panelData[4] >> 5;
+  uint8_t dscDay = dscDay1 | dscDay2;
+  uint8_t dscHour = panelData[4] & 0x1F;
+  uint8_t dscMinute = panelData[5] >> 2;
 
-  if (dscYear3 >= 7) stream->print(F("19"));
-  else stream->print(F("20"));
-  stream->print(dscYear3);
-  stream->print(dscYear4);
-  stream->print(F("."));
-  if (dscMonth < 10) stream->print("0");
-  stream->print(dscMonth);
-  stream->print(F("."));
-  if (dscDay < 10) stream->print("0");
-  stream->print(dscDay);
-  stream->print(F(" "));
-  if (dscHour < 10) stream->print("0");
-  stream->print(dscHour);
-  stream->print(F(":"));
-  if (dscMinute < 10) stream->print("0");
-  stream->print(dscMinute);
+  if (dscYear3 >= 7) std::cout << "19" << std::endl;
+  else std::cout << "20" << std::endl;
+  std::cout << dscYear3 << std::endl;
+  std::cout << dscYear4 << std::endl;
+  std::cout << "." << std::endl;
+  if (dscMonth < 10) std::cout << "0" << std::endl;
+  std::cout << dscMonth << std::endl;
+  std::cout << "." << std::endl;
+  if (dscDay < 10) std::cout << "0" << std::endl;
+  std::cout << dscDay << std::endl;
+  std::cout << " " << std::endl;
+  if (dscHour < 10) std::cout << "0" << std::endl;
+  std::cout << dscHour << std::endl;
+  std::cout << ":" << std::endl;
+  if (dscMinute < 10) std::cout << "0" << std::endl;
+  std::cout << dscMinute << std::endl;
 
   if (panelData[6] == 0 && panelData[7] == 0) {
-    stream->print(F(" | Timestamp"));
+    std::cout << " | Timestamp" << std::endl;
     return;
   }
 
   switch (panelData[3] >> 6) {
-    case 0x00: stream->print(F(" | ")); break;
-    case 0x01: stream->print(F(" | Partition 1 | ")); break;
-    case 0x02: stream->print(F(" | Partition 2 | ")); break;
+    case 0x00: std::cout << " | " << std::endl; break;
+    case 0x01: std::cout << " | Partition 1 | " << std::endl; break;
+    case 0x02: std::cout << " | Partition 2 | " << std::endl; break;
   }
 
   switch (panelData[5] & 0x03) {
@@ -1488,39 +1488,39 @@ void dscKeybusInterface::printPanel_0xA5() {
  */
 void dscKeybusInterface::printPanel_0xB1() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
   bool enabledZones = false;
-  stream->print(F("Enabled zones 1-32 | Partition 1: "));
-  for (byte panelByte = 2; panelByte <= 5; panelByte++) {
+  std::cout << "Enabled zones 1-32 | Partition 1: " << std::endl;
+  for (uint8_t panelByte = 2; panelByte <= 5; panelByte++) {
     if (panelData[panelByte] != 0) {
       enabledZones = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 1) + ((panelByte - 2) * 8));
-          stream->print(" ");
+          std::cout << (zoneBit + 1) + ((panelByte - 2) * 8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
-  if (!enabledZones) stream->print(F("none "));
+  if (!enabledZones) std::cout << "none " << std::endl;
 
   enabledZones = false;
-  stream->print(F("| Partition 2: "));
-  for (byte panelByte = 6; panelByte <= 9; panelByte++) {
+  std::cout << "| Partition 2: " << std::endl;
+  for (uint8_t panelByte = 6; panelByte <= 9; panelByte++) {
     if (panelData[panelByte] != 0) {
       enabledZones = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 1) + ((panelByte - 6) * 8));
-          stream->print(" ");
+          std::cout << (zoneBit + 1) + ((panelByte - 6) * 8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
-  if (!enabledZones) stream->print(F("none"));
+  if (!enabledZones) std::cout << "none" << std::endl;
 }
 
 
@@ -1534,13 +1534,13 @@ void dscKeybusInterface::printPanel_0xB1() {
  */
 void dscKeybusInterface::printPanel_0xBB() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  stream->print(F("Bell: "));
-  if (bitRead(panelData[2],5)) stream->print(F("on"));
-  else stream->print(F("off"));
+  std::cout << "Bell: " << std::endl;
+  if (bitRead(panelData[2],5)) std::cout << "on" << std::endl;
+  else std::cout << "off" << std::endl;
 }
 
 
@@ -1555,20 +1555,20 @@ void dscKeybusInterface::printPanel_0xBB() {
  */
 void dscKeybusInterface::printPanel_0xC3() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
   if (panelData[3] == 0xFF) {
     switch (panelData[2]) {
-      case 0x00: stream->print(F("Keypad ready")); break;
-      case 0x10: stream->print(F("Unknown command 1: Power-on +33s")); break;
+      case 0x00: std::cout << "Keypad ready" << std::endl; break;
+      case 0x10: std::cout << "Unknown command 1: Power-on +33s" << std::endl; break;
       case 0x30:
-      case 0x40: stream->print(F("Keypad lockout")); break;
-      default: stream->print(F("Unrecognized data")); break;
+      case 0x40: std::cout << "Keypad lockout" << std::endl; break;
+      default: std::cout << "Unrecognized data" << std::endl; break;
     }
   }
-  else stream->print(F("Unrecognized data"));
+  else std::cout << "Unrecognized data" << std::endl;
 }
 
 
@@ -1584,23 +1584,23 @@ void dscKeybusInterface::printPanel_0xC3() {
  */
 void dscKeybusInterface::printPanel_0xCE() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
   switch (panelData[2]) {
     case 0x01: {
       switch (panelData[3]) {
-        case 0xA0: stream->print(F("Partition 1,2 exit delay, partition 1,2 disarmed")); break;
-        case 0xA4: stream->print(F("Partition 2 armed away")); break;
-        case 0xB1: stream->print(F("Partition 1 armed stay")); break;
-        case 0xB3: stream->print(F("Partition 1 armed away")); break;
-        default: stream->print(F("Unrecognized data")); break;
+        case 0xA0: std::cout << "Partition 1,2 exit delay, partition 1,2 disarmed" << std::endl; break;
+        case 0xA4: std::cout << "Partition 2 armed away" << std::endl; break;
+        case 0xB1: std::cout << "Partition 1 armed stay" << std::endl; break;
+        case 0xB3: std::cout << "Partition 1 armed away" << std::endl; break;
+        default: std::cout << "Unrecognized data" << std::endl; break;
       }
       break;
     }
-    case 0x40: stream->print(F("Partition 1,2 activity")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x40: std::cout << "Partition 1,2 activity" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
@@ -1613,7 +1613,7 @@ void dscKeybusInterface::printPanel_0xCE() {
  *  11111111 1 11111111 11111111 11111111 11111111 11111111 11111111 11111111 00001111 [Keypad] Slot 8
  */
 void dscKeybusInterface::printPanel_0xD5() {
-  stream->print(F("Keypad zone query"));
+  std::cout << "Keypad zone query" << std::endl;
 }
 
 
@@ -1624,7 +1624,7 @@ void dscKeybusInterface::printPanel_0xD5() {
  */
 void dscKeybusInterface::printPanel_0xE6() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
@@ -1643,7 +1643,7 @@ void dscKeybusInterface::printPanel_0xE6() {
     case 0x2B: printPanel_0xE6_0x2B(); break;  // Enabled zones 1-32, partitions 3-8
     case 0x2C: printPanel_0xE6_0x2C(); break;  // Enabled zones 33-64, partitions 3-8
     case 0x41: printPanel_0xE6_0x41(); break;  // Status in access code programming, zone lights 65-95
-    default: stream->print(F("Unrecognized data"));
+    default: std::cout << "Unrecognized data" << std::endl;
   }
 }
 
@@ -1653,7 +1653,7 @@ void dscKeybusInterface::printPanel_0xE6() {
  */
 void dscKeybusInterface::printPanel_0xE6_0x03() {
   printPanelLights(2);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(3);
 }
 
@@ -1662,8 +1662,8 @@ void dscKeybusInterface::printPanel_0xE6_0x03() {
  *  0xE6_0x09: Zones 33-40 status
  */
 void dscKeybusInterface::printPanel_0xE6_0x09() {
-  stream->print(F("Zones 33-40 open: "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Zones 33-40 open: " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,33);
   }
@@ -1674,8 +1674,8 @@ void dscKeybusInterface::printPanel_0xE6_0x09() {
  *  0xE6_0x0B: Zones 41-48 status
  */
 void dscKeybusInterface::printPanel_0xE6_0x0B() {
-  stream->print(F("Zones 41-48 open: "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Zones 41-48 open: " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,41);
   }
@@ -1686,8 +1686,8 @@ void dscKeybusInterface::printPanel_0xE6_0x0B() {
  *  0xE6_0x0D: Zones 49-56 status
  */
 void dscKeybusInterface::printPanel_0xE6_0x0D() {
-  stream->print(F("Zones 49-56 open: "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Zones 49-56 open: " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,49);
   }
@@ -1698,8 +1698,8 @@ void dscKeybusInterface::printPanel_0xE6_0x0D() {
  *  0xE6_0x0F: Zones 57-64 status
  */
 void dscKeybusInterface::printPanel_0xE6_0x0F() {
-  stream->print(F("Zones 57-64 open: "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Zones 57-64 open: " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,57);
   }
@@ -1712,29 +1712,29 @@ void dscKeybusInterface::printPanel_0xE6_0x0F() {
  *  11100110 0 00010111 00000100 00000000 00000100 00000000 00000000 00000000 00000101 [0xE6] Partition 3 |  // Zone 3
  */
 void dscKeybusInterface::printPanel_0xE6_0x17() {
-  stream->print(F("Partition "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Partition " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,1);
   }
 
-  stream->print(F("| Status lights flashing: "));
+  std::cout << "| Status lights flashing: " << std::endl;
   printPanelLights(4);
 
   bool zoneLights = false;
-  stream->print(F("| Zones 1-32 flashing: "));
-  for (byte panelByte = 5; panelByte <= 8; panelByte++) {
+  std::cout << "| Zones 1-32 flashing: " << std::endl;
+  for (uint8_t panelByte = 5; panelByte <= 8; panelByte++) {
     if (panelData[panelByte] != 0) {
       zoneLights = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 1) + ((panelByte-5) *  8));
-          stream->print(" ");
+          std::cout << (zoneBit + 1) + ((panelByte-5) *  8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
-  if (!zoneLights) stream->print(F("none"));
+  if (!zoneLights) std::cout << "none" << std::endl;
 }
 
 
@@ -1745,29 +1745,29 @@ void dscKeybusInterface::printPanel_0xE6_0x17() {
  *  11100110 0 00011000 00000001 00000100 00000000 00000000 00000000 10000000 10000011 [0xE6] Partition 1 |  // Zone 64
  */
 void dscKeybusInterface::printPanel_0xE6_0x18() {
-  stream->print(F("Partition "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Partition " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,1);
   }
 
-  stream->print(F("| Status lights flashing: "));
+  std::cout << "| Status lights flashing: " << std::endl;
   printPanelLights(4);
 
   bool zoneLights = false;
-  stream->print(F("| Zones 33-64 flashing: "));
-  for (byte panelByte = 5; panelByte <= 8; panelByte++) {
+  std::cout << "| Zones 33-64 flashing: " << std::endl;
+  for (uint8_t panelByte = 5; panelByte <= 8; panelByte++) {
     if (panelData[panelByte] != 0) {
       zoneLights = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 33) + ((panelByte-5) *  8));
-          stream->print(" ");
+          std::cout << (zoneBit + 33) + ((panelByte-5) *  8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
-  if (!zoneLights) stream->print(F("none"));
+  if (!zoneLights) std::cout << "none" << std::endl;
 }
 
 
@@ -1775,26 +1775,26 @@ void dscKeybusInterface::printPanel_0xE6_0x18() {
  *  0xE6_0x19: Beep - one time, partitions 3-8
  */
 void dscKeybusInterface::printPanel_0xE6_0x19() {
-  stream->print(F("Partition "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Partition " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,1);
   }
 
-  stream->print(F("| Beep: "));
+  std::cout << "| Beep: " << std::endl;
   switch (panelData[4]) {
-    case 0x04: stream->print(F("2 beeps")); break;
-    case 0x06: stream->print(F("3 beeps")); break;
-    case 0x08: stream->print(F("4 beeps")); break;
-    case 0x0C: stream->print(F("6 beeps")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x04: std::cout << "2 beeps" << std::endl; break;
+    case 0x06: std::cout << "3 beeps" << std::endl; break;
+    case 0x08: std::cout << "4 beeps" << std::endl; break;
+    case 0x0C: std::cout << "6 beeps" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
 
 void dscKeybusInterface::printPanel_0xE6_0x1A() {
-  stream->print(F("0x1A: "));
-  stream->print(F("Unrecognized data"));
+  std::cout << "0x1A: " << std::endl;
+  std::cout << "Unrecognized data" << std::endl;
 }
 
 
@@ -1802,20 +1802,20 @@ void dscKeybusInterface::printPanel_0xE6_0x1A() {
  *  0xE6_0x1D: Beep pattern, partitions 3-8
  */
 void dscKeybusInterface::printPanel_0xE6_0x1D() {
-  stream->print(F("Partition "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Partition " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,1);
   }
 
-  stream->print(F("| Beep pattern: "));
+  std::cout << "| Beep pattern: " << std::endl;
   switch (panelData[4]) {
-    case 0x00: stream->print(F("off")); break;
-    case 0x11: stream->print(F("single beep (exit delay)")); break;
-    case 0x31: stream->print(F("triple beep (exit delay)")); break;
-    case 0x80: stream->print(F("solid tone")); break;
-    case 0xB1: stream->print(F("triple beep (entrance delay)")); break;
-    default: stream->print(F("Unrecognized data")); break;
+    case 0x00: std::cout << "off" << std::endl; break;
+    case 0x11: std::cout << "single beep (exit delay)" << std::endl; break;
+    case 0x31: std::cout << "triple beep (exit delay)" << std::endl; break;
+    case 0x80: std::cout << "solid tone" << std::endl; break;
+    case 0xB1: std::cout << "triple beep (entrance delay)" << std::endl; break;
+    default: std::cout << "Unrecognized data" << std::endl; break;
   }
 }
 
@@ -1826,26 +1826,26 @@ void dscKeybusInterface::printPanel_0xE6_0x1D() {
  *  CRC: yes
  */
 void dscKeybusInterface::printPanel_0xE6_0x20() {
-  stream->print(F("Status lights: "));
+  std::cout << "Status lights: " << std::endl;
   printPanelLights(3);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(4);
 
   bool zoneLights = false;
-  stream->print(F(" | Zone lights: "));
-  for (byte panelByte = 5; panelByte <= 8; panelByte++) {
+  std::cout << " | Zone lights: " << std::endl;
+  for (uint8_t panelByte = 5; panelByte <= 8; panelByte++) {
     if (panelData[panelByte] != 0) {
       zoneLights = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 33) + ((panelByte-5) *  8));
-          stream->print(" ");
+          std::cout << (zoneBit + 33) + ((panelByte-5) *  8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
 
-  if (!zoneLights) stream->print(F("none"));
+  if (!zoneLights) std::cout << "none" << std::endl;
 }
 
 
@@ -1853,26 +1853,26 @@ void dscKeybusInterface::printPanel_0xE6_0x20() {
  *  0xE6_0x2B: Enabled zones 1-32, partitions 3-8
  */
 void dscKeybusInterface::printPanel_0xE6_0x2B() {
-  stream->print(F("Partition "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Partition " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,1);
   }
 
   bool enabledZones = false;
-  stream->print(F("| Enabled zones  1-32: "));
-  for (byte panelByte = 4; panelByte <= 7; panelByte++) {
+  std::cout << "| Enabled zones  1-32: " << std::endl;
+  for (uint8_t panelByte = 4; panelByte <= 7; panelByte++) {
     if (panelData[panelByte] != 0) {
       enabledZones = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 1) + ((panelByte - 4) * 8));
-          stream->print(" ");
+          std::cout << (zoneBit + 1) + ((panelByte - 4) * 8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
-  if (!enabledZones) stream->print(F("none"));
+  if (!enabledZones) std::cout << "none" << std::endl;
 }
 
 
@@ -1880,26 +1880,26 @@ void dscKeybusInterface::printPanel_0xE6_0x2B() {
  *  0xE6_0x2C: Enabled zones 33-64, partitions 1-8
  */
 void dscKeybusInterface::printPanel_0xE6_0x2C() {
-  stream->print(F("Partition "));
-  if (panelData[3] == 0) stream->print(F("none"));
+  std::cout << "Partition " << std::endl;
+  if (panelData[3] == 0) std::cout << "none" << std::endl;
   else {
     printPanelBitNumbers(3,1);
   }
 
   bool enabledZones = false;
-  stream->print(F("| Enabled zones 33-64: "));
-  for (byte panelByte = 4; panelByte <= 7; panelByte++) {
+  std::cout << "| Enabled zones 33-64: " << std::endl;
+  for (uint8_t panelByte = 4; panelByte <= 7; panelByte++) {
     if (panelData[panelByte] != 0) {
       enabledZones = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 33) + ((panelByte - 4) * 8));
-          stream->print(" ");
+          std::cout << (zoneBit + 33) + ((panelByte - 4) * 8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
-  if (!enabledZones) stream->print(F("none"));
+  if (!enabledZones) std::cout << "none" << std::endl;
 }
 
 
@@ -1908,26 +1908,26 @@ void dscKeybusInterface::printPanel_0xE6_0x2C() {
  *  CRC: yes
  */
 void dscKeybusInterface::printPanel_0xE6_0x41() {
-  stream->print(F("Status lights: "));
+  std::cout << "Status lights: " << std::endl;
   printPanelLights(3);
-  stream->print(F("- "));
+  std::cout << "- " << std::endl;
   printPanelMessages(4);
 
   bool zoneLights = false;
-  stream->print(F(" | Zone lights: "));
-  for (byte panelByte = 5; panelByte <= 8; panelByte++) {
+  std::cout << " | Zone lights: " << std::endl;
+  for (uint8_t panelByte = 5; panelByte <= 8; panelByte++) {
     if (panelData[panelByte] != 0) {
       zoneLights = true;
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(panelData[panelByte],zoneBit)) {
-          stream->print((zoneBit + 65) + ((panelByte-5) *  8));
-          stream->print(" ");
+          std::cout << (zoneBit + 65) + ((panelByte-5) *  8) << std::endl;
+          std::cout << " " << std::endl;
         }
       }
     }
   }
 
-  if (!zoneLights) stream->print(F("none"));
+  if (!zoneLights) std::cout << "none" << std::endl;
 }
 
 
@@ -1950,41 +1950,41 @@ void dscKeybusInterface::printPanel_0xE6_0x41() {
  */
 void dscKeybusInterface::printPanel_0xEB() {
   if (!validCRC()) {
-    stream->print(F("[CRC Error]"));
+    std::cout << "[CRC Error]" << std::endl;
     return;
   }
 
-  byte dscYear3 = panelData[3] >> 4;
-  byte dscYear4 = panelData[3] & 0x0F;
-  byte dscMonth = panelData[4] << 2; dscMonth >>=4;
-  byte dscDay1 = panelData[4] << 6; dscDay1 >>= 3;
-  byte dscDay2 = panelData[5] >> 5;
-  byte dscDay = dscDay1 | dscDay2;
-  byte dscHour = panelData[5] & 0x1F;
-  byte dscMinute = panelData[6] >> 2;
+  uint8_t dscYear3 = panelData[3] >> 4;
+  uint8_t dscYear4 = panelData[3] & 0x0F;
+  uint8_t dscMonth = panelData[4] << 2; dscMonth >>=4;
+  uint8_t dscDay1 = panelData[4] << 6; dscDay1 >>= 3;
+  uint8_t dscDay2 = panelData[5] >> 5;
+  uint8_t dscDay = dscDay1 | dscDay2;
+  uint8_t dscHour = panelData[5] & 0x1F;
+  uint8_t dscMinute = panelData[6] >> 2;
 
-  if (dscYear3 >= 7) stream->print(F("19"));
-  else stream->print(F("20"));
-  stream->print(dscYear3);
-  stream->print(dscYear4);
-  stream->print(F("."));
-  if (dscMonth < 10) stream->print("0");
-  stream->print(dscMonth);
-  stream->print(F("."));
-  if (dscDay < 10) stream->print("0");
-  stream->print(dscDay);
-  stream->print(F(" "));
-  if (dscHour < 10) stream->print("0");
-  stream->print(dscHour);
-  stream->print(F(":"));
-  if (dscMinute < 10) stream->print("0");
-  stream->print(dscMinute);
+  if (dscYear3 >= 7) std::cout << "19" << std::endl;
+  else std::cout << "20" << std::endl;
+  std::cout << dscYear3 << std::endl;
+  std::cout << dscYear4 << std::endl;
+  std::cout << "." << std::endl;
+  if (dscMonth < 10) std::cout << "0" << std::endl;
+  std::cout << dscMonth << std::endl;
+  std::cout << "." << std::endl;
+  if (dscDay < 10) std::cout << "0" << std::endl;
+  std::cout << dscDay << std::endl;
+  std::cout << " " << std::endl;
+  if (dscHour < 10) std::cout << "0" << std::endl;
+  std::cout << dscHour << std::endl;
+  std::cout << ":" << std::endl;
+  if (dscMinute < 10) std::cout << "0" << std::endl;
+  std::cout << dscMinute << std::endl;
 
-  if (panelData[2] == 0) stream->print(F(" | "));
+  if (panelData[2] == 0) std::cout << " | " << std::endl;
   else {
-    stream->print(F(" | Partition "));
+    std::cout << " | Partition " << std::endl;
     printPanelBitNumbers(2,1);
-    stream->print(F("| "));
+    std::cout << "| " << std::endl;
   }
 
   switch (panelData[7]) {
@@ -2009,7 +2009,7 @@ void dscKeybusInterface::printPanel_0xEB() {
  *  01110111 1 11111111 11111111 11111111 11111111 11111111 11111111 [Keypad] Fire alarm
  */
 void dscKeybusInterface::printModule_0x77() {
-  stream->print(F("[Keypad] Fire alarm"));
+  std::cout << "[Keypad] Fire alarm" << std::endl;
 }
 
 
@@ -2019,7 +2019,7 @@ void dscKeybusInterface::printModule_0x77() {
  *  10111011 1 11111111 11111111 11111111 11111111 11111111 11111111 [Keypad] Aux alarm
  */
 void dscKeybusInterface::printModule_0xBB() {
-  stream->print(F("[Keypad] Auxiliary alarm"));
+  std::cout << "[Keypad] Auxiliary alarm" << std::endl;
 }
 
 
@@ -2029,7 +2029,7 @@ void dscKeybusInterface::printModule_0xBB() {
  *  11011101 1 11111111 11111111 11111111 11111111 11111111 11111111 [Keypad] Panic alarm
  */
 void dscKeybusInterface::printModule_0xDD() {
-  stream->print(F("[Keypad] Panic alarm"));
+  std::cout << "[Keypad] Panic alarm" << std::endl;
 }
 
 
@@ -2043,14 +2043,14 @@ void dscKeybusInterface::printModule_Notification() {
     // 11111111 1 11111111 11111111 10111111 11111111 [Zone Expander] Status notification
     // 00101000 0 11111111 11111111 11111111 11111111 11111111 [0x28] Zone expander query
     case 0xBF:
-      stream->print(F("[Zone Expander] Status notification"));
+      std::cout << "[Zone Expander] Status notification" << std::endl;
       break;
 
     // Keypad: Unknown Keybus notification, panel responds with 0x4C query
     // 11111111 1 11111111 11111111 11111110 11111111 [Keypad] Unknown Keybus notification
     // 01001100 0 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 [0x4C] Unknown Keybus query
     case 0xFE:
-      stream->print(F("[Keypad] Unknown Keybus notification"));
+      std::cout << "[Keypad] Unknown Keybus notification" << std::endl;
       break;
   }
 
@@ -2059,7 +2059,7 @@ void dscKeybusInterface::printModule_Notification() {
     // 11111111 1 11111111 11111111 11111111 11111011 [Keypad] Zone status notification
     // 11010101 0 10101010 10101010 10101010 10101010 10101010 10101010 10101010 10101010 [0xD5] Keypad zone query
     case 0xFB:
-      stream->print(F("[Keypad] Zone status notification"));
+      std::cout << "[Keypad] Zone status notification" << std::endl;
       break;
   }
 }
@@ -2072,15 +2072,15 @@ void dscKeybusInterface::printModule_Notification() {
  *  11111111 1 00111111 11111111 11111111 11111111 11111111 [Keypad] Slots active: 1
  */
 void dscKeybusInterface::printModule_Panel_0x11() {
-  stream->print(F("[Keypad] Slots active: "));
-  if ((moduleData[2] & 0xC0) == 0) stream->print(F("1 "));
-  if ((moduleData[2] & 0x30) == 0) stream->print(F("2 "));
-  if ((moduleData[2] & 0x0C) == 0) stream->print(F("3 "));
-  if ((moduleData[2] & 0x03) == 0) stream->print(F("4 "));
-  if ((moduleData[3] & 0xC0) == 0) stream->print(F("5 "));
-  if ((moduleData[3] & 0x30) == 0) stream->print(F("6 "));
-  if ((moduleData[3] & 0x0C) == 0) stream->print(F("7 "));
-  if ((moduleData[3] & 0x03) == 0) stream->print(F("8 "));
+  std::cout << "[Keypad] Slots active: " << std::endl;
+  if ((moduleData[2] & 0xC0) == 0) std::cout << "1 " << std::endl;
+  if ((moduleData[2] & 0x30) == 0) std::cout << "2 " << std::endl;
+  if ((moduleData[2] & 0x0C) == 0) std::cout << "3 " << std::endl;
+  if ((moduleData[2] & 0x03) == 0) std::cout << "4 " << std::endl;
+  if ((moduleData[3] & 0xC0) == 0) std::cout << "5 " << std::endl;
+  if ((moduleData[3] & 0x30) == 0) std::cout << "6 " << std::endl;
+  if ((moduleData[3] & 0x0C) == 0) std::cout << "7 " << std::endl;
+  if ((moduleData[3] & 0x03) == 0) std::cout << "8 " << std::endl;
 }
 
 
@@ -2103,16 +2103,16 @@ void dscKeybusInterface::printModule_Panel_0x11() {
  *  11111111 1 00111100 11111111 11111111 11111111 11111111 11111111 11111111 11111111 [Keypad] Slot 1 | Zone closed  //After exiting *8 programming after NC
  */
 void dscKeybusInterface::printModule_Panel_0xD5() {
-  stream->print(F("[Keypad] "));
+  std::cout << "[Keypad] " << std::endl;
   bool firstData = true;
-  for (byte moduleByte = 2; moduleByte <= 9; moduleByte++) {
-    byte slotData = moduleData[moduleByte];
+  for (uint8_t moduleByte = 2; moduleByte <= 9; moduleByte++) {
+    uint8_t slotData = moduleData[moduleByte];
     if (slotData < 0xFF) {
-      if (firstData) stream->print(F("Slot "));
-      else stream->print(F(" | Slot "));
-      stream->print(moduleByte - 1);
-      if ((slotData & 0x03) == 0x03 && (slotData & 0x30) == 0) stream->print(F(" zone open"));
-      if ((slotData & 0x03) == 0 && (slotData & 0x30) == 0x30) stream->print(F(" zone closed"));
+      if (firstData) std::cout << "Slot " << std::endl;
+      else std::cout << " | Slot " << std::endl;
+      std::cout << moduleByte - 1 << std::endl;
+      if ((slotData & 0x03) == 0x03 && (slotData & 0x30) == 0) std::cout << " zone open" << std::endl;
+      if ((slotData & 0x03) == 0 && (slotData & 0x30) == 0x30) std::cout << " zone closed" << std::endl;
       firstData = false;
     }
   }
@@ -2126,87 +2126,87 @@ void dscKeybusInterface::printModule_Panel_0xD5() {
  *  11111111 1 00101101 11111111 11111111 11111111 [Keypad] #
  */
 void dscKeybusInterface::printModule_Keys() {
-  stream->print(F("[Keypad] "));
+  std::cout << "[Keypad] " << std::endl;
 
-  byte keyByte = 2;
+  uint8_t keyByte = 2;
   if (currentCmd == 0x05) {
     if (moduleData[2] != 0xFF) {
-      stream->print(F("Partition 1 | Key: "));
+      std::cout << "Partition 1 | Key: " << std::endl;
     }
     else if (moduleData[3] != 0xFF) {
-      stream->print(F("Partition 2 | Key: "));
+      std::cout << "Partition 2 | Key: " << std::endl;
       keyByte = 3;
     }
     else if (moduleData[8] != 0xFF) {
-      stream->print(F("Partition 3 | Key: "));
+      std::cout << "Partition 3 | Key: " << std::endl;
       keyByte = 8;
     }
 
     else if (moduleData[9] != 0xFF) {
-      stream->print(F("Partition 4 | Key: "));
+      std::cout << "Partition 4 | Key: " << std::endl;
       keyByte = 9;
     }
   }
   else if (currentCmd == 0x1B) {
     if (moduleData[2] != 0xFF) {
-      stream->print(F("Partition 5 | Key: "));
+      std::cout << "Partition 5 | Key: " << std::endl;
     }
     else if (moduleData[3] != 0xFF) {
-      stream->print(F("Partition 6 | Key: "));
+      std::cout << "Partition 6 | Key: " << std::endl;
       keyByte = 3;
     }
     else if (moduleData[8] != 0xFF) {
-      stream->print(F("Partition 7 | Key: "));
+      std::cout << "Partition 7 | Key: " << std::endl;
       keyByte = 8;
     }
 
     else if (moduleData[9] != 0xFF) {
-      stream->print(F("Partition 8 | Key: "));
+      std::cout << "Partition 8 | Key: " << std::endl;
       keyByte = 9;
     }
   }
 
   if (hideKeypadDigits && (moduleData[2] <= 0x27 || moduleData[3] <= 0x27 || moduleData[8] <= 0x27 || moduleData[9] <= 0x27)) {
-    stream->print(F("[Digit]"));
+    std::cout << "[Digit]" << std::endl;
     return;
   }
 
   switch (moduleData[keyByte]) {
-    case 0x00: stream->print(F("0")); break;
-    case 0x05: stream->print(F("1")); break;
-    case 0x0A: stream->print(F("2")); break;
-    case 0x0F: stream->print(F("3")); break;
-    case 0x11: stream->print(F("4")); break;
-    case 0x16: stream->print(F("5")); break;
-    case 0x1B: stream->print(F("6")); break;
-    case 0x1C: stream->print(F("7")); break;
-    case 0x22: stream->print(F("8")); break;
-    case 0x27: stream->print(F("9")); break;
-    case 0x28: stream->print(F("*")); break;
-    case 0x2D: stream->print(F("#")); break;
-    case 0x52: stream->print(F("Identified voice prompt help")); break;
-    case 0x70: stream->print(F("Command output 3")); break;
-    case 0xAF: stream->print(F("Arm stay")); break;
-    case 0xB1: stream->print(F("Arm away")); break;
-    case 0xB6: stream->print(F("*9 No entry delay arm, requires access code")); break;
-    case 0xBB: stream->print(F("Door chime configuration")); break;
-    case 0xBC: stream->print(F("*6 System test")); break;
-    case 0xC3: stream->print(F("*1 Zone bypass programming")); break;
-    case 0xC4: stream->print(F("*2 Trouble menu")); break;
-    case 0xC9: stream->print(F("*3 Alarm memory display")); break;
-    case 0xCE: stream->print(F("*5 Programming, requires master code")); break;
-    case 0xD0: stream->print(F("*6 Programming, requires master code")); break;
-    case 0xD5: stream->print(F("Command output 1")); break;
-    case 0xDA: stream->print(F("Reset / Command output 2")); break;
-    case 0xDF: stream->print(F("General voice prompt help")); break;
-    case 0xE1: stream->print(F("Quick exit")); break;
-    case 0xE6: stream->print(F("Activate stay/away zones")); break;
-    case 0xEB: stream->print(F("Function key [20] Future Use")); break;
-    case 0xEC: stream->print(F("Command output 4")); break;
-    case 0xF7: stream->print(F("Left/right arrow")); break;
+    case 0x00: std::cout << "0" << std::endl; break;
+    case 0x05: std::cout << "1" << std::endl; break;
+    case 0x0A: std::cout << "2" << std::endl; break;
+    case 0x0F: std::cout << "3" << std::endl; break;
+    case 0x11: std::cout << "4" << std::endl; break;
+    case 0x16: std::cout << "5" << std::endl; break;
+    case 0x1B: std::cout << "6" << std::endl; break;
+    case 0x1C: std::cout << "7" << std::endl; break;
+    case 0x22: std::cout << "8" << std::endl; break;
+    case 0x27: std::cout << "9" << std::endl; break;
+    case 0x28: std::cout << "*" << std::endl; break;
+    case 0x2D: std::cout << "#" << std::endl; break;
+    case 0x52: std::cout << "Identified voice prompt help" << std::endl; break;
+    case 0x70: std::cout << "Command output 3" << std::endl; break;
+    case 0xAF: std::cout << "Arm stay" << std::endl; break;
+    case 0xB1: std::cout << "Arm away" << std::endl; break;
+    case 0xB6: std::cout << "*9 No entry delay arm, requires access code" << std::endl; break;
+    case 0xBB: std::cout << "Door chime configuration" << std::endl; break;
+    case 0xBC: std::cout << "*6 System test" << std::endl; break;
+    case 0xC3: std::cout << "*1 Zone bypass programming" << std::endl; break;
+    case 0xC4: std::cout << "*2 Trouble menu" << std::endl; break;
+    case 0xC9: std::cout << "*3 Alarm memory display" << std::endl; break;
+    case 0xCE: std::cout << "*5 Programming, requires master code" << std::endl; break;
+    case 0xD0: std::cout << "*6 Programming, requires master code" << std::endl; break;
+    case 0xD5: std::cout << "Command output 1" << std::endl; break;
+    case 0xDA: std::cout << "Reset / Command output 2" << std::endl; break;
+    case 0xDF: std::cout << "General voice prompt help" << std::endl; break;
+    case 0xE1: std::cout << "Quick exit" << std::endl; break;
+    case 0xE6: std::cout << "Activate stay/away zones" << std::endl; break;
+    case 0xEB: std::cout << "Function key [20] Future Use" << std::endl; break;
+    case 0xEC: std::cout << "Command output 4" << std::endl; break;
+    case 0xF7: std::cout << "Left/right arrow" << std::endl; break;
     default:
-      stream->print(F("Unrecognized key: 0x"));
-      stream->print(moduleData[keyByte], HEX);
+      std::cout << "Unrecognized key: 0x" << std::endl;
+      std::cout << moduleData[keyByte] << std::endl;
       break;
   }
 }
@@ -2217,22 +2217,22 @@ void dscKeybusInterface::printModule_Keys() {
  */
 
 void dscKeybusInterface::printPanelBinary(bool printSpaces) {
-  for (byte panelByte = 0; panelByte < panelByteCount; panelByte++) {
-    if (panelByte == 1) stream->print(panelData[panelByte]);  // Prints the stop bit
+  for (uint8_t panelByte = 0; panelByte < panelByteCount; panelByte++) {
+    if (panelByte == 1) std::cout << panelData[panelByte] << std::endl;  // Prints the stop bit
     else {
-      for (byte mask = 0x80; mask; mask >>= 1) {
-        if (mask & panelData[panelByte]) stream->print("1");
-        else stream->print("0");
+      for (uint8_t mask = 0x80; mask; mask >>= 1) {
+        if (mask & panelData[panelByte]) std::cout << "1" << std::endl;
+        else std::cout << "0" << std::endl;
       }
     }
-    if (printSpaces && (panelByte != panelByteCount - 1 || displayTrailingBits)) stream->print(" ");
+    if (printSpaces && (panelByte != panelByteCount - 1 || displayTrailingBits)) std::cout << " " << std::endl;
   }
 
   if (displayTrailingBits) {
-    byte trailingBits = (panelBitCount - 1) % 8;
+    uint8_t trailingBits = (panelBitCount - 1) % 8;
     if (trailingBits > 0) {
       for (int i = trailingBits - 1; i >= 0; i--) {
-        stream->print(bitRead(panelData[panelByteCount], i));
+        std::cout << bitRead(panelData[panelByteCount], i) << std::endl;
       }
     }
   }
@@ -2240,27 +2240,27 @@ void dscKeybusInterface::printPanelBinary(bool printSpaces) {
 
 
 void dscKeybusInterface::printModuleBinary(bool printSpaces) {
-  for (byte moduleByte = 0; moduleByte < moduleByteCount; moduleByte++) {
-    if (moduleByte == 1) stream->print(moduleData[moduleByte]);  // Prints the stop bit
+  for (uint8_t moduleByte = 0; moduleByte < moduleByteCount; moduleByte++) {
+    if (moduleByte == 1) std::cout << moduleData[moduleByte] << std::endl;  // Prints the stop bit
     else if (hideKeypadDigits
             && (moduleByte == 2 || moduleByte == 3 || moduleByte == 8 || moduleByte == 9)
             && (moduleData[2] <= 0x27 || moduleData[3] <= 0x27 || moduleData[8] <= 0x27 || moduleData[9] <= 0x27)
             && !queryResponse)
-              stream->print(F("........"));  // Hides keypad digits
+              std::cout << "........" << std::endl;  // Hides keypad digits
     else {
-      for (byte mask = 0x80; mask; mask >>= 1) {
-        if (mask & moduleData[moduleByte]) stream->print("1");
-        else stream->print("0");
+      for (uint8_t mask = 0x80; mask; mask >>= 1) {
+        if (mask & moduleData[moduleByte]) std::cout << "1" << std::endl;
+        else std::cout << "0" << std::endl;
       }
     }
-    if (printSpaces && (moduleByte != moduleByteCount - 1 || displayTrailingBits)) stream->print(" ");
+    if (printSpaces && (moduleByte != moduleByteCount - 1 || displayTrailingBits)) std::cout << " " << std::endl;
   }
 
   if (displayTrailingBits) {
-    byte trailingBits = (moduleBitCount - 1) % 8;
+    uint8_t trailingBits = (moduleBitCount - 1) % 8;
     if (trailingBits > 0) {
       for (int i = trailingBits - 1; i >= 0; i--) {
-        stream->print(bitRead(moduleData[moduleByteCount], i));
+        std::cout << bitRead(moduleData[moduleByteCount], i) << std::endl;
       }
     }
   }
@@ -2272,7 +2272,7 @@ void dscKeybusInterface::printModuleBinary(bool printSpaces) {
  */
 void dscKeybusInterface::printPanelCommand() {
   // Prints the hex value of command byte 0
-  stream->print(F("0x"));
-  if (panelData[0] < 16) stream->print("0");
-  stream->print(panelData[0], HEX);
+  std::cout << "0x" << std::endl;
+  if (panelData[0] < 16) std::cout << "0" << std::endl;
+  std::cout << panelData[0] << std::endl; // HEX Value
 }

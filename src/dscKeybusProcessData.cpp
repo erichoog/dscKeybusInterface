@@ -30,8 +30,8 @@ void dscKeybusInterface::processPanelStatus() {
     statusChanged = true;
   }
 
-  byte partitionStart = 0;
-  byte partitionCount = 0;
+  uint8_t partitionStart = 0;
+  uint8_t partitionCount = 0;
   if (panelData[0] == 0x05) {
     partitionStart = 0;
     if (panelByteCount < 9) partitionCount = 2;
@@ -43,8 +43,8 @@ void dscKeybusInterface::processPanelStatus() {
     partitionCount = 8;
   }
 
-  for (byte partitionIndex = partitionStart; partitionIndex < partitionCount; partitionIndex++) {
-    byte statusByte, messageByte;
+  for (uint8_t partitionIndex = partitionStart; partitionIndex < partitionCount; partitionIndex++) {
+    uint8_t statusByte, messageByte;
     if (partitionIndex < 4) {
       statusByte = (partitionIndex * 2) + 2;
       messageByte = (partitionIndex * 2) + 3;
@@ -257,8 +257,8 @@ void dscKeybusInterface::processPanelStatus() {
 void dscKeybusInterface::processPanel_0x27() {
   if (!validCRC()) return;
 
-  for (byte partitionIndex = 0; partitionIndex < 2; partitionIndex++) {
-    byte messageByte = (partitionIndex * 2) + 3;
+  for (uint8_t partitionIndex = 0; partitionIndex < 2; partitionIndex++) {
+    uint8_t messageByte = (partitionIndex * 2) + 3;
 
     // Messages
     if (panelData[messageByte] == 0x04 || panelData[messageByte] == 0x05) {
@@ -288,13 +288,13 @@ void dscKeybusInterface::processPanel_0x27() {
 
   // Open zones 1-8 status is stored in openZones[0] and openZonesChanged[0]: Bit 0 = Zone 1 ... Bit 7 = Zone 8
   openZones[0] = panelData[6];
-  byte zonesChanged = openZones[0] ^ previousOpenZones[0];
+  uint8_t zonesChanged = openZones[0] ^ previousOpenZones[0];
   if (zonesChanged != 0) {
     previousOpenZones[0] = openZones[0];
     openZonesStatusChanged = true;
     statusChanged = true;
 
-    for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+    for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
       if (bitRead(zonesChanged, zoneBit)) {
         bitWrite(openZonesChanged[0], zoneBit, 1);
         if (bitRead(panelData[6], zoneBit)) bitWrite(openZones[0], zoneBit, 1);
@@ -311,13 +311,13 @@ void dscKeybusInterface::processPanel_0x2D() {
 
   // Open zones 9-16 status is stored in openZones[1] and openZonesChanged[1]: Bit 0 = Zone 9 ... Bit 7 = Zone 16
   openZones[1] = panelData[6];
-  byte zonesChanged = openZones[1] ^ previousOpenZones[1];
+  uint8_t zonesChanged = openZones[1] ^ previousOpenZones[1];
   if (zonesChanged != 0) {
     previousOpenZones[1] = openZones[1];
     openZonesStatusChanged = true;
     statusChanged = true;
 
-    for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+    for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
       if (bitRead(zonesChanged, zoneBit)) {
         bitWrite(openZonesChanged[1], zoneBit, 1);
         if (bitRead(panelData[6], zoneBit)) bitWrite(openZones[1], zoneBit, 1);
@@ -334,13 +334,13 @@ void dscKeybusInterface::processPanel_0x34() {
 
   // Open zones 17-24 status is stored in openZones[2] and openZonesChanged[2]: Bit 0 = Zone 17 ... Bit 7 = Zone 24
   openZones[2] = panelData[6];
-  byte zonesChanged = openZones[2] ^ previousOpenZones[2];
+  uint8_t zonesChanged = openZones[2] ^ previousOpenZones[2];
   if (zonesChanged != 0) {
     previousOpenZones[2] = openZones[2];
     openZonesStatusChanged = true;
     statusChanged = true;
 
-    for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+    for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
       if (bitRead(zonesChanged, zoneBit)) {
         bitWrite(openZonesChanged[2], zoneBit, 1);
         if (bitRead(panelData[6], zoneBit)) bitWrite(openZones[2], zoneBit, 1);
@@ -357,13 +357,13 @@ void dscKeybusInterface::processPanel_0x3E() {
 
   // Open zones 25-32 status is stored in openZones[3] and openZonesChanged[3]: Bit 0 = Zone 25 ... Bit 7 = Zone 32
   openZones[3] = panelData[6];
-  byte zonesChanged = openZones[3] ^ previousOpenZones[3];
+  uint8_t zonesChanged = openZones[3] ^ previousOpenZones[3];
   if (zonesChanged != 0) {
     previousOpenZones[3] = openZones[3];
     openZonesStatusChanged = true;
     statusChanged = true;
 
-    for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+    for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
       if (bitRead(zonesChanged, zoneBit)) {
         bitWrite(openZonesChanged[3], zoneBit, 1);
         if (bitRead(panelData[6], zoneBit)) bitWrite(openZones[3], zoneBit, 1);
@@ -377,12 +377,12 @@ void dscKeybusInterface::processPanel_0x3E() {
 void dscKeybusInterface::processPanel_0xA5() {
   if (!validCRC()) return;
 
-  byte dscYear3 = panelData[2] >> 4;
-  byte dscYear4 = panelData[2] & 0x0F;
+  uint8_t dscYear3 = panelData[2] >> 4;
+  uint8_t dscYear4 = panelData[2] & 0x0F;
   year = (dscYear3 * 10) + dscYear4;
   month = panelData[3] << 2; month >>= 4;
-  byte dscDay1 = panelData[3] << 6; dscDay1 >>= 3;
-  byte dscDay2 = panelData[4] >> 5;
+  uint8_t dscDay1 = panelData[3] << 6; dscDay1 >>= 3;
+  uint8_t dscDay2 = panelData[4] >> 5;
   day = dscDay1 | dscDay2;
   hour = panelData[4] & 0x1F;
   minute = panelData[5] >> 2;
@@ -394,7 +394,7 @@ void dscKeybusInterface::processPanel_0xA5() {
     return;
   }
 
-  byte partition = panelData[3] >> 6;
+  uint8_t partition = panelData[3] >> 6;
   switch (panelData[5] & 0x03) {
     case 0x00: processPanelStatus0(partition, 6); break;
     case 0x02: processPanelStatus2(partition, 6); break;
@@ -406,17 +406,17 @@ void dscKeybusInterface::processPanel_0xEB() {
   if (!validCRC()) return;
   if (dscPartitions < 3) return;
 
-  byte dscYear3 = panelData[3] >> 4;
-  byte dscYear4 = panelData[3] & 0x0F;
+  uint8_t dscYear3 = panelData[3] >> 4;
+  uint8_t dscYear4 = panelData[3] & 0x0F;
   year = (dscYear3 * 10) + dscYear4;
   month = panelData[4] << 2; month >>=4;
-  byte dscDay1 = panelData[4] << 6; dscDay1 >>= 3;
-  byte dscDay2 = panelData[5] >> 5;
+  uint8_t dscDay1 = panelData[4] << 6; dscDay1 >>= 3;
+  uint8_t dscDay2 = panelData[5] >> 5;
   day = dscDay1 | dscDay2;
   hour = panelData[5] & 0x1F;
   minute = panelData[6] >> 2;
 
-  byte partition;
+  uint8_t partition;
   switch (panelData[2]) {
     case 0x01: partition = 1; break;
     case 0x02: partition = 2; break;
@@ -438,7 +438,7 @@ void dscKeybusInterface::processPanel_0xEB() {
 
 
 
-void dscKeybusInterface::processPanelStatus0(byte partition, byte panelByte) {
+void dscKeybusInterface::processPanelStatus0(uint8_t partition, uint8_t panelByte) {
 
   // Processes status messages that are not partition-specific
   if (partition == 0 && panelData[0] == 0xA5) {
@@ -488,7 +488,7 @@ void dscKeybusInterface::processPanelStatus0(byte partition, byte panelByte) {
 
   // Processes partition-specific status
   if (partition > dscPartitions) return;  // Ensures that only the configured number of partitions are processed
-  byte partitionIndex = partition - 1;
+  uint8_t partitionIndex = partition - 1;
 
   if (panelData[panelByte] == 0x4A ||                                    // Disarmed after alarm in memory
       panelData[panelByte] == 0xE6 ||                                    // Disarmed special: keyswitch/wireless key/DLS
@@ -538,9 +538,9 @@ void dscKeybusInterface::processPanelStatus0(byte partition, byte panelByte) {
       statusChanged = true;
     }
 
-    byte maxZones = dscZones * 8;
+    uint8_t maxZones = dscZones * 8;
     if (maxZones > 32) maxZones = 32;
-    for (byte zoneCount = 0; zoneCount < maxZones; zoneCount++) {
+    for (uint8_t zoneCount = 0; zoneCount < maxZones; zoneCount++) {
       if (panelData[panelByte] == 0x09 + zoneCount) {
         if (zoneCount < 8) {
           bitWrite(alarmZones[0], zoneCount, 1);
@@ -591,9 +591,9 @@ void dscKeybusInterface::processPanelStatus0(byte partition, byte panelByte) {
   //   alarmZones[7] and alarmZonesChanged[7]: Bit 0 = Zone 57 ... Bit 7 = Zone 64
   if (panelData[panelByte] >= 0x29 && panelData[panelByte] <= 0x48) {
 
-    byte maxZones = dscZones * 8;
+    uint8_t maxZones = dscZones * 8;
     if (maxZones > 32) maxZones = 32;
-    for (byte zoneCount = 0; zoneCount < maxZones; zoneCount++) {
+    for (uint8_t zoneCount = 0; zoneCount < maxZones; zoneCount++) {
       if (panelData[panelByte] == 0x29 + zoneCount) {
         if (zoneCount < 8) {
           bitWrite(alarmZones[0], zoneCount, 0);
@@ -637,9 +637,9 @@ void dscKeybusInterface::processPanelStatus0(byte partition, byte panelByte) {
 }
 
 
-void dscKeybusInterface::processPanelStatus2(byte partition, byte panelByte) {
+void dscKeybusInterface::processPanelStatus2(uint8_t partition, uint8_t panelByte) {
   if (partition == 0 || partition > dscPartitions) return;
-  byte partitionIndex = partition - 1;
+  uint8_t partitionIndex = partition - 1;
 
   // Armed: stay and Armed: away
   if (panelData[panelByte] == 0x9A || panelData[panelByte] == 0x9B) {
@@ -686,9 +686,9 @@ void dscKeybusInterface::processPanelStatus2(byte partition, byte panelByte) {
 }
 
 
-void dscKeybusInterface::processPanelStatus4(byte partition, byte panelByte) {
+void dscKeybusInterface::processPanelStatus4(uint8_t partition, uint8_t panelByte) {
   if (partition == 0 || partition > dscPartitions) return;
-  byte partitionIndex = partition - 1;
+  uint8_t partitionIndex = partition - 1;
 
   // Zone alarm, zones 33-64
   // Zone alarm status is stored using 1 bit per zone in alarmZones[] and alarmZonesChanged[]:
@@ -705,10 +705,10 @@ void dscKeybusInterface::processPanelStatus4(byte partition, byte panelByte) {
       statusChanged = true;
     }
 
-    byte maxZones = dscZones * 8;
+    uint8_t maxZones = dscZones * 8;
     if (maxZones > 32) maxZones -= 32;
     else return;
-    for (byte zoneCount = 0; zoneCount < maxZones; zoneCount++) {
+    for (uint8_t zoneCount = 0; zoneCount < maxZones; zoneCount++) {
       if (panelData[panelByte] == zoneCount) {
         if (zoneCount < 8) {
           bitWrite(alarmZones[4], zoneCount, 1);
@@ -744,10 +744,10 @@ void dscKeybusInterface::processPanelStatus4(byte partition, byte panelByte) {
   if (panelData[panelByte] >= 0x20 && panelData[panelByte] <= 0x3F) {
     alarmZonesStatusChanged = true;
 
-    byte maxZones = dscZones * 8;
+    uint8_t maxZones = dscZones * 8;
     if (maxZones > 32) maxZones -= 32;
     else return;
-    for (byte zoneCount = 0; zoneCount < maxZones; zoneCount++) {
+    for (uint8_t zoneCount = 0; zoneCount < maxZones; zoneCount++) {
       if (panelData[panelByte] == 0x20 + zoneCount) {
         if (zoneCount < 8) {
           bitWrite(alarmZones[4], zoneCount, 0);
@@ -794,13 +794,13 @@ void dscKeybusInterface::processPanel_0xE6() {
 void dscKeybusInterface::processPanel_0xE6_0x09() {
   if (dscZones > 4) {
     openZones[4] = panelData[3];
-    byte zonesChanged = openZones[4] ^ previousOpenZones[4];
+    uint8_t zonesChanged = openZones[4] ^ previousOpenZones[4];
     if (zonesChanged != 0) {
       previousOpenZones[4] = openZones[4];
       openZonesStatusChanged = true;
       statusChanged = true;
 
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(zonesChanged, zoneBit)) {
           bitWrite(openZonesChanged[4], zoneBit, 1);
           if (bitRead(panelData[3], zoneBit)) bitWrite(openZones[4], zoneBit, 1);
@@ -816,13 +816,13 @@ void dscKeybusInterface::processPanel_0xE6_0x09() {
 void dscKeybusInterface::processPanel_0xE6_0x0B() {
   if (dscZones > 5) {
     openZones[5] = panelData[3];
-    byte zonesChanged = openZones[5] ^ previousOpenZones[5];
+    uint8_t zonesChanged = openZones[5] ^ previousOpenZones[5];
     if (zonesChanged != 0) {
       previousOpenZones[5] = openZones[5];
       openZonesStatusChanged = true;
       statusChanged = true;
 
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(zonesChanged, zoneBit)) {
           bitWrite(openZonesChanged[5], zoneBit, 1);
           if (bitRead(panelData[3], zoneBit)) bitWrite(openZones[5], zoneBit, 1);
@@ -838,13 +838,13 @@ void dscKeybusInterface::processPanel_0xE6_0x0B() {
 void dscKeybusInterface::processPanel_0xE6_0x0D() {
   if (dscZones > 6) {
     openZones[6] = panelData[3];
-    byte zonesChanged = openZones[6] ^ previousOpenZones[6];
+    uint8_t zonesChanged = openZones[6] ^ previousOpenZones[6];
     if (zonesChanged != 0) {
       previousOpenZones[6] = openZones[6];
       openZonesStatusChanged = true;
       statusChanged = true;
 
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(zonesChanged, zoneBit)) {
           bitWrite(openZonesChanged[6], zoneBit, 1);
           if (bitRead(panelData[3], zoneBit)) bitWrite(openZones[6], zoneBit, 1);
@@ -860,13 +860,13 @@ void dscKeybusInterface::processPanel_0xE6_0x0D() {
 void dscKeybusInterface::processPanel_0xE6_0x0F() {
   if (dscZones > 7) {
     openZones[7] = panelData[3];
-    byte zonesChanged = openZones[7] ^ previousOpenZones[7];
+    uint8_t zonesChanged = openZones[7] ^ previousOpenZones[7];
     if (zonesChanged != 0) {
       previousOpenZones[7] = openZones[7];
       openZonesStatusChanged = true;
       statusChanged = true;
 
-      for (byte zoneBit = 0; zoneBit < 8; zoneBit++) {
+      for (uint8_t zoneBit = 0; zoneBit < 8; zoneBit++) {
         if (bitRead(zonesChanged, zoneBit)) {
           bitWrite(openZonesChanged[7], zoneBit, 1);
           if (bitRead(panelData[3], zoneBit)) bitWrite(openZones[7], zoneBit, 1);
